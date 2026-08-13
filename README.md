@@ -55,18 +55,29 @@ Starter (~$29/mo) or Finnhub Starter (~$50/mo).
 
 ## Deploying
 
-`vercel.json` serves `prototype/` statically with clean-URL rewrites. Note that
-**`server.js` does not run on Vercel** — the `/api/*` proxy is local-only, so a
-deployed build shows the UI with the chart falling back to a local shape and the
-tape unavailable. Porting the proxy to Next.js route handlers is Phase 0/1 work.
+`vercel.json` serves `prototype/` statically and Vercel picks up `api/[fn].js`
+as a serverless function, so `/api/*` works in production exactly as it does
+locally — both delegate to `lib/finnhub.js`.
+
+**Required:** set `FINNHUB_API_KEY` in Vercel → Settings → Environment
+Variables. Without it every `/api/*` call returns a 500 explaining what's
+missing, and the pages still render with the chart falling back to a local shape.
+
+`server.js` is not used on Vercel; it exists so local dev matches production.
+
+> Serverless functions are stateless between cold starts, so the in-memory cache
+> is best-effort in production. The TTLs still keep a page load inside Finnhub's
+> 60 req/min ceiling, but a busy site needs a shared cache (Upstash Redis).
 
 ## Repo layout
 
 ```
 prototype/     the design — one shared stylesheet, one file per page
-server.js      static server + Finnhub proxy (local dev)
+lib/finnhub.js Finnhub access: fetch, cache, endpoint shapes (shared)
+api/[fn].js    Vercel serverless function → /api/quote, /api/tape, …
+server.js      local dev server (static + same /api/*)
 scripts/       spike.js (probe Finnhub access), fix-encoding.js
-reference/     original design reference image and video
+reference/     design reference image and video (gitignored)
 PLAN.md        phased build plan, schema, legal notes
 ```
 

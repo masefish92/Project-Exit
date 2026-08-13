@@ -3,8 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "description": "Project Exit — stock investment app. Currently a front-end design prototype.",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "dev": "node server.js",
-    "start": "node server.js"
+    "dev": "node server.js"
   }
 }
