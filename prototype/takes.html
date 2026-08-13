@@ -1,0 +1,213 @@
+<title>C:\Takes</title>
+<link rel="stylesheet" href="/app.css">
+
+<div class="app">
+  <div class="orb" aria-hidden="true"><i class="up"></i><i class="down"></i><i class="core"></i></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <defs><linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#E879C7"/><stop offset=".55" stop-color="#8B5CF6"/><stop offset="1" stop-color="#3B5BFF"/>
+        </linearGradient></defs>
+        <path d="M3 15.5 8 9.5l4 3.6 7-9.1" stroke="url(#bg1)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="19" cy="4" r="2.6" fill="url(#bg1)"/>
+      </svg>
+      <b>Exit</b>
+    </div>
+
+    <nav class="pills" aria-label="Primary">
+      <a href="/">Dashboard</a>
+      <a href="/takes.html" aria-current="page">C:\Takes</a>
+      <a href="/research.html">Research</a>
+      <a href="/premium.html">Premium</a>
+    </nav>
+
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+      </svg>
+      <input type="search" id="q" placeholder="Search takes" aria-label="Search takes"/>
+      <kbd>/</kbd>
+    </div>
+
+    <span class="spacer"></span>
+    <span class="chip">Free plan</span>
+    <div class="avatar" title="Marcus">M</div>
+  </header>
+
+  <div class="takes-head">
+    <span class="free-tag">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
+        <path d="m4 12.5 5 5L20 6.5"/>
+      </svg>
+      Free to read · no signup
+    </span>
+    <h1><span class="dim">C:\</span>Takes<span class="caret" aria-hidden="true"></span></h1>
+    <p>
+      Where I write down what I think is happening and why, before I find out whether I was right.
+      Market structure, individual businesses, and the occasional post-mortem on a position that
+      didn't work. Everything here is free — the paid side is only my book, not my opinions.
+    </p>
+  </div>
+
+  <div class="tagbar" id="tagbar" role="group" aria-label="Filter by topic"></div>
+
+  <div id="results"></div>
+
+  <div class="sub-strip">
+    <div class="txt">
+      <h3>New takes by email</h3>
+      <p>Roughly weekly. No pitches for the paid tier beyond this sentence — unsubscribe in one click.</p>
+    </div>
+    <form class="sub-form" id="subform">
+      <input type="email" placeholder="you@example.com" aria-label="Email address" required/>
+      <button class="btn" type="submit">Subscribe</button>
+    </form>
+    <p class="fineprint" id="submsg" hidden style="width:100%;margin:0;text-align:left;color:var(--gain)"></p>
+  </div>
+
+  <p class="disclaimer">
+    These are personal opinions written at a point in time and not updated as things change. They are
+    not investment advice, not a recommendation to buy or sell anything, and not tailored to your
+    situation. I usually hold positions in the companies I write about — assume I'm talking my book
+    and check <a href="/premium.html" style="color:var(--ink-2)">what I actually own</a>.
+    Sample articles below are placeholders for layout.
+  </p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+
+  var TAKES=[
+    {
+      lead:true, cat:"Market structure", date:"11 Aug 2026", read:"9 min",
+      title:"The index is not the market, and 2026 is the year that stopped being pedantic",
+      dek:"Seven companies now carry enough weight that the S&P's headline number describes their quarter more than the economy's. That's fine until you're using the index as a hedge for something it no longer resembles — which is where I think a lot of allocations quietly are right now.",
+      tags:["indices","concentration","risk"]
+    },
+    {
+      cat:"Post-mortem", date:"22 Jul 2026", read:"7 min",
+      title:"I was wrong about Intel, and it wasn't the thesis that failed",
+      dek:"Closed at −31%. The turnaround argument I wrote in 2024 still looks directionally right to me. What I got wrong was capital: they need more years and more money than the balance sheet supports, and being early is indistinguishable from being wrong.",
+      tags:["semis","INTC","mistakes"]
+    },
+    {
+      cat:"Businesses", date:"29 Jul 2026", read:"11 min",
+      title:"The market keeps pricing search disruption the numbers haven't shown up for",
+      dek:"Three years into the assumption that assistants eat search, query volume and pricing are both up. Either the disruption is slower than the narrative, or it's arriving somewhere the reported segments don't reveal. I've been adding, and I want to be honest about which of those I'm betting on.",
+      tags:["GOOGL","AI","valuation"]
+    },
+    {
+      cat:"Market structure", date:"14 Jul 2026", read:"6 min",
+      title:"Passive flows don't set prices until suddenly they're the only bid",
+      dek:"The debate about whether indexing distorts valuation misses the timing question. It doesn't matter on the way up. It matters enormously in the three weeks where everyone needs the same exit at once.",
+      tags:["liquidity","indices","risk"]
+    },
+    {
+      cat:"Method", date:"2 Jul 2026", read:"8 min",
+      title:"Position sizing is the only part of this I'm confident I do well",
+      dek:"My stock picking is roughly average and I've made peace with that. The returns come almost entirely from not letting a single conviction get large enough to matter, which is a much duller skill than having opinions.",
+      tags:["risk","process"]
+    },
+    {
+      cat:"Businesses", date:"18 Jun 2026", read:"10 min",
+      title:"Data-center capex is a real cycle, and real cycles end",
+      dek:"Nothing about the current buildout looks fake to me — the orders are signed and the demand is measurable. But every infrastructure cycle I've read about looked exactly this durable roughly eighteen months before it didn't.",
+      tags:["semis","NVDA","cycles"]
+    },
+    {
+      cat:"Post-mortem", date:"3 Jun 2026", read:"5 min",
+      title:"Trimming Tesla wasn't a call on the business",
+      dek:"It had grown to a share of the book where a bad quarter would have changed my year. That's a sizing failure I let run too long, and the sell was housekeeping rather than insight.",
+      tags:["TSLA","risk","process"]
+    },
+    {
+      cat:"Method", date:"20 May 2026", read:"7 min",
+      title:"Why I publish my losers first",
+      dek:"A track record that only contains winners is evidence of editing, not skill. The post-mortems are the only part of this site I'd consider load-bearing.",
+      tags:["process","mistakes"]
+    }
+  ];
+
+  var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});};
+
+  /* topic filter, built from the tags actually in use */
+  var counts={};
+  TAKES.forEach(function(t){t.tags.forEach(function(g){counts[g]=(counts[g]||0)+1;});});
+  var TAGS=Object.keys(counts).sort(function(a,b){return counts[b]-counts[a];});
+  var active="all", query="";
+
+  $("#tagbar").innerHTML='<button type="button" aria-pressed="true" data-t="all">All · '+TAKES.length+'</button>'+
+    TAGS.map(function(g){
+      return '<button type="button" aria-pressed="false" data-t="'+g+'">'+g+' · '+counts[g]+'</button>';
+    }).join("");
+
+  function metaLine(t){
+    return '<div class="ameta"><span class="cat">'+esc(t.cat)+'</span><span class="sep">·</span>'+
+      '<span>'+t.date+'</span><span class="sep">·</span><span>'+t.read+'</span></div>';
+  }
+  function tagRow(t){
+    return '<div class="atags">'+t.tags.map(function(g){return '<span>'+esc(g)+'</span>';}).join("")+'</div>';
+  }
+
+  function render(){
+    var list=TAKES.filter(function(t){
+      var okTag = active==="all" || t.tags.indexOf(active)>-1;
+      var hay=(t.title+" "+t.dek+" "+t.cat+" "+t.tags.join(" ")).toLowerCase();
+      return okTag && (!query || hay.indexOf(query)>-1);
+    });
+
+    if(!list.length){
+      $("#results").innerHTML='<div class="empty">No takes match that. Try a different topic, or clear the search.</div>';
+      return;
+    }
+
+    // The lead article only holds its featured slot in the unfiltered view.
+    var lead = (active==="all" && !query && list[0].lead) ? list[0] : null;
+    var rest = lead ? list.slice(1) : list;
+
+    var html="";
+    if(lead){
+      html+='<a class="lead" href="#">'+metaLine(lead)+
+        '<h2>'+esc(lead.title)+'</h2><p class="dek">'+esc(lead.dek)+'</p>'+tagRow(lead)+'</a>';
+    }
+    html+='<div class="takes-grid">'+rest.map(function(t){
+      return '<a class="take" href="#">'+metaLine(t)+
+        '<h3>'+esc(t.title)+'</h3><p class="dek">'+esc(t.dek)+'</p>'+tagRow(t)+'</a>';
+    }).join("")+'</div>';
+
+    $("#results").innerHTML=html;
+  }
+  render();
+
+  $("#tagbar").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    [].forEach.call(this.children,function(c){c.setAttribute("aria-pressed",String(c===b));});
+    active=b.dataset.t;
+    render();
+  });
+
+  $("#q").addEventListener("input",function(){
+    query=this.value.trim().toLowerCase();
+    render();
+  });
+
+  $("#subform").addEventListener("submit",function(e){
+    e.preventDefault();
+    // Phase 5: POST to the mailing list provider.
+    var msg=$("#submsg");
+    msg.hidden=false;
+    msg.textContent="Subscribed — check your inbox to confirm.";
+    this.reset();
+  });
+
+  addEventListener("keydown",function(e){
+    if(e.key==="/"&&!/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)){
+      e.preventDefault(); $("#q").focus();
+    }
+  });
+})();
+</script>

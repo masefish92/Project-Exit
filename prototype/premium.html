@@ -1,0 +1,331 @@
+<title>Exit Premium</title>
+<link rel="stylesheet" href="/app.css">
+
+<div class="app">
+  <div class="orb" aria-hidden="true"><i class="up"></i><i class="down"></i><i class="core"></i></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <defs><linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#E879C7"/><stop offset=".55" stop-color="#8B5CF6"/><stop offset="1" stop-color="#3B5BFF"/>
+        </linearGradient></defs>
+        <path d="M3 15.5 8 9.5l4 3.6 7-9.1" stroke="url(#bg1)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="19" cy="4" r="2.6" fill="url(#bg1)"/>
+      </svg>
+      <b>Exit</b>
+    </div>
+
+    <nav class="pills" aria-label="Primary">
+      <a href="/">Dashboard</a>
+      <a href="/takes.html">C:\Takes</a>
+      <a href="/research.html">Research</a>
+      <a href="/premium.html" aria-current="page">Premium</a>
+    </nav>
+
+    <span class="spacer"></span>
+    <span class="chip" id="tier-chip">Free plan</span>
+    <div class="avatar" title="Marcus">M</div>
+  </header>
+
+  <div class="page-head">
+    <div class="eyebrow">Exit Premium</div>
+    <h1 id="head-title">Every position I hold, published after the close.</h1>
+    <p id="head-sub">
+      My full portfolio — each holding, its size in dollars, cost basis, and what I was thinking when
+      I bought it. Published once daily after the market closes, one trading day behind. No signals,
+      no alerts, no urgency: just the whole book, open.
+    </p>
+  </div>
+
+  <div class="byline">
+    <div class="avatar">M</div>
+    <div class="who">Marcus<span>Publishing since March 2026 · 214 trades disclosed</span></div>
+  </div>
+
+  <div class="delay">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>
+    </svg>
+    <div>
+      <b>Delayed by one trading day.</b> Positions shown as of the close on
+      <b id="asof">12 August 2026</b>. Nothing here is published before I have finished trading it —
+      by design, so no one is ever trading against a subscriber.
+    </div>
+  </div>
+
+  <!-- ============ LOCKED ============ -->
+  <div id="locked">
+    <div class="lock-grid">
+      <div>
+        <section class="card" aria-labelledby="h-prev">
+          <header><h2 id="h-prev">Portfolio · preview</h2><span class="spacer"></span>
+            <span class="chip">2 of 8 shown</span></header>
+
+          <div class="teaser-stats">
+            <div><div class="k">Positions</div><div class="v">8</div></div>
+            <div><div class="k">Largest sector</div><div class="v" style="font-size:20px">Semis</div></div>
+            <div><div class="k">Held 12mo+</div><div class="v">5</div></div>
+            <div><div class="k">Trades this month</div><div class="v">3</div></div>
+          </div>
+
+          <div class="tbl-scroll">
+            <table>
+              <thead><tr>
+                <th scope="col">Symbol</th><th scope="col">Shares</th>
+                <th scope="col">Cost basis</th><th scope="col">Value</th><th scope="col">Unrealized</th>
+              </tr></thead>
+              <tbody id="lock-tbl"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <div class="tier-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" style="flex:none;margin-top:1px">
+            <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
+          </svg>
+          <div>
+            The free plan keeps the full market dashboard — live quotes, charts, watchlists, news, and
+            your own portfolio tracking. Premium adds only <b style="color:var(--ink-2);font-weight:500">my</b> book.
+          </div>
+        </div>
+      </div>
+
+      <section class="card paywall" aria-labelledby="h-pay">
+        <h3 id="h-pay">Exit Premium</h3>
+        <div class="price"><b>$19</b><span>/ month</span></div>
+        <p style="margin:0;color:var(--muted);font-size:13px">Cancel anytime. No refunds for partial months.</p>
+
+        <ul class="perks">
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m4 12.5 5 5L20 6.5"/></svg>
+            <span>All 8 positions with dollar values, share counts, and cost basis</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m4 12.5 5 5L20 6.5"/></svg>
+            <span>Every buy and sell, with the written reasoning at the time</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m4 12.5 5 5L20 6.5"/></svg>
+            <span>Full trade history back to March 2026, including the losers</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m4 12.5 5 5L20 6.5"/></svg>
+            <span>Monthly write-up on what changed and what I got wrong</span></li>
+          <li class="off"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            <span>No real-time alerts — everything is delayed one trading day</span></li>
+          <li class="off"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            <span>No personal advice — I can't tell you what to do with your money</span></li>
+        </ul>
+
+        <button class="btn" type="button" id="subscribe">
+          Subscribe
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="fineprint">Secure checkout by Stripe. Your card details never touch this server.</p>
+      </section>
+    </div>
+  </div>
+
+  <!-- ============ UNLOCKED ============ -->
+  <div id="unlocked" hidden>
+    <div class="grid">
+      <section class="card c-hero" aria-labelledby="h-pv">
+        <header><h2 id="h-pv">My portfolio</h2><span class="spacer"></span>
+          <span class="chip">At close · 12 Aug</span></header>
+        <div class="hero-val"><strong id="pv">—</strong></div>
+        <div class="hero-chg">
+          <span class="pill" id="pv-chg">—</span>
+          <span id="pv-pct">—</span>
+          <span style="color:var(--faint)">on the day</span>
+        </div>
+        <div class="hero-spark" id="pv-spark"></div>
+        <div class="hero-foot">
+          <div class="stat"><div class="k">Total return</div><div class="v" id="pv-tr">—</div></div>
+          <div class="stat"><div class="k">Cost basis</div><div class="v" id="pv-cb">—</div></div>
+          <div class="stat"><div class="k">Positions</div><div class="v">8</div></div>
+        </div>
+      </section>
+
+      <section class="card c-chart" aria-labelledby="h-hd">
+        <header><h2 id="h-hd">Holdings</h2><span class="spacer"></span>
+          <span class="chip">Dollar values shown</span></header>
+        <div class="tbl-scroll">
+          <table>
+            <thead><tr>
+              <th scope="col">Symbol</th><th scope="col">Shares</th><th scope="col">Avg cost</th>
+              <th scope="col">Price</th><th scope="col">Value</th><th scope="col">Unrealized</th><th scope="col">Weight</th>
+            </tr></thead>
+            <tbody id="full-tbl"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card" style="grid-column:span 8" aria-labelledby="h-tr">
+        <header><h2 id="h-tr">Recent trades</h2><span class="spacer"></span>
+          <button class="linkish" type="button">Full history · 214</button></header>
+        <div id="trades"></div>
+      </section>
+
+      <section class="card" style="grid-column:span 4" aria-labelledby="h-al">
+        <header><h2 id="h-al">Allocation</h2></header>
+        <div class="donut" id="donut"></div>
+        <div class="legend" id="legend"></div>
+      </section>
+    </div>
+  </div>
+
+  <p class="disclaimer">
+    I publish what I own and what I did, one trading day after the fact. This is a record of my own
+    decisions, not a recommendation — I don't know your situation, your timeline, or your risk tolerance,
+    and nothing here is personal investment advice. I may buy or sell any position shown at any time,
+    including before you see it. Past results say nothing about future ones. You can lose money.
+  </p>
+
+  <!-- Removed once real Stripe entitlement is wired; see PLAN.md Phase 6. -->
+  <div class="devbar">
+    Prototype state
+    <div class="seg" id="statesw" role="group" aria-label="Preview state">
+      <button type="button" aria-pressed="true" data-s="locked">Free visitor</button>
+      <button type="button" aria-pressed="false" data-s="unlocked">Subscriber</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Sizing display mode. Switching to "pct" publishes weights instead of
+     dollars everywhere on this page — one constant, no rewrite. */
+  var SIZING="usd";   // "usd" | "pct" | "shares"
+
+  var BOOK=[
+    {t:"NVDA", n:"NVIDIA Corp",            q:236, a:121.50, p:225.58},
+    {t:"AAPL", n:"Apple Inc",              q:128, a:198.20, p:303.46},
+    {t:"MSFT", n:"Microsoft Corp",         q:54,  a:412.75, p:529.92},
+    {t:"AMZN", n:"Amazon.com Inc",         q:96,  a:186.40, p:230.26},
+    {t:"GOOGL",n:"Alphabet Inc",           q:71,  a:165.80, p:264.23},
+    {t:"SPY",  n:"SPDR S&P 500 ETF",       q:22,  a:588.40, p:776.84},
+    {t:"TSLA", n:"Tesla Inc",              q:34,  a:338.90, p:427.13},
+    {t:"AMD",  n:"Advanced Micro Devices", q:62,  a:154.20, p:182.39}
+  ];
+
+  var TRADES=[
+    {side:"buy", t:"AMD", q:22, px:171.40, when:"11 Aug 2026",
+     thesis:"Added on the pullback after the data-center guide. Position was underweight relative to the thesis I wrote in June, and nothing in the quarter changed it."},
+    {side:"sell",t:"TSLA",q:16, px:441.05, when:"7 Aug 2026",
+     thesis:"Trimmed roughly a third. Not a call on the business — the position had grown past where I'm comfortable having any single volatile name, so this is risk management, not a view."},
+    {side:"buy", t:"GOOGL",q:24,px:251.80, when:"29 Jul 2026",
+     thesis:"Third add this year. The market keeps pricing search disruption that the numbers haven't shown yet. I could be wrong about that, and it's my largest single source of risk."},
+    {side:"sell",t:"INTC",q:180,px:24.90, when:"22 Jul 2026",
+     thesis:"Closed at a loss of about 31%. I bought a turnaround that I now think needs several more years and more capital than they have. I was early and I was wrong on the timeline."}
+  ];
+
+  var fmtUSD=function(v,d){return "$"+v.toLocaleString("en-US",{minimumFractionDigits:d===undefined?2:d,maximumFractionDigits:d===undefined?2:d});};
+  var sign=function(v){return (v>=0?"+":"−")+"$"+Math.abs(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});};
+  var pct=function(v){return (v>=0?"+":"−")+Math.abs(v).toFixed(2)+"%";};
+  var cls=function(v){return v>=0?"up":"dn";};
+
+  var total=0,cost=0;
+  BOOK.forEach(function(h){h.val=h.q*h.p;h.cost=h.q*h.a;h.pl=h.val-h.cost;total+=h.val;cost+=h.cost;});
+  BOOK.forEach(function(h){h.w=h.val/total*100;});
+
+  function sized(h){
+    if(SIZING==="pct")    return h.w.toFixed(1)+"%";
+    if(SIZING==="shares") return h.q+" sh";
+    return fmtUSD(h.val,0);
+  }
+
+  /* ---------- locked ----------
+     Only the two teaser rows carry real numbers. The rest render a redaction
+     bar and no value at all — in production the gated rows are simply absent
+     from the server's response, so there is nothing to reveal in devtools. */
+  function bar(w){return '<span class="redact" style="width:'+w+'px"></span>';}
+  $("#lock-tbl").innerHTML=BOOK.map(function(h,i){
+    if(i<2){
+      return '<tr><td><div class="tick">'+h.t+'</div><div class="sub">'+h.n+'</div></td>'+
+        '<td>'+h.q+'</td><td>'+fmtUSD(h.a)+'</td><td>'+fmtUSD(h.val,0)+'</td>'+
+        '<td class="'+cls(h.pl)+'">'+sign(h.pl)+'</td></tr>';
+    }
+    return '<tr class="locked-row"><td><div class="tick">'+bar(38)+'</div><div class="sub">'+bar(96)+'</div></td>'+
+      '<td>'+bar(28)+'</td><td>'+bar(52)+'</td><td>'+bar(58)+'</td><td>'+bar(64)+'</td></tr>';
+  }).join("");
+
+  /* ---------- unlocked ---------- */
+  $("#full-tbl").innerHTML=BOOK.map(function(h){
+    return '<tr><td><div class="tick">'+h.t+'</div><div class="sub">'+h.n+'</div></td>'+
+      '<td>'+h.q+'</td><td>'+fmtUSD(h.a)+'</td><td>'+fmtUSD(h.p)+'</td>'+
+      '<td>'+sized(h)+'</td>'+
+      '<td class="'+cls(h.pl)+'">'+sign(h.pl)+
+      '<div class="sub '+cls(h.pl)+'" style="opacity:.75">'+pct(h.pl/h.cost*100)+'</div></td>'+
+      '<td><span class="wbar"><span style="width:'+h.w.toFixed(1)+'%"></span></span> '+h.w.toFixed(1)+'%</td></tr>';
+  }).join("");
+
+  $("#trades").innerHTML=TRADES.map(function(t){
+    return '<div class="trade">'+
+      '<span class="side '+t.side+'">'+t.side.toUpperCase()+'</span>'+
+      '<div><div><span class="tick">'+t.t+'</span></div>'+
+      '<div class="exec">'+t.q+' shares at '+fmtUSD(t.px)+'</div>'+
+      '<div class="thesis">'+t.thesis+'</div></div>'+
+      '<div class="when">'+t.when+'</div></div>';
+  }).join("");
+
+  var dayChg=total*0.0071, dayPct=0.71;
+  $("#pv").textContent=fmtUSD(total);
+  $("#pv-chg").textContent=sign(dayChg); $("#pv-chg").className="pill "+cls(dayChg);
+  $("#pv-pct").textContent=pct(dayPct);  $("#pv-pct").className=cls(dayPct);
+  $("#pv-tr").textContent=sign(total-cost); $("#pv-tr").className="v "+cls(total-cost);
+  $("#pv-cb").textContent=fmtUSD(cost,0);
+
+  /* sparkline + donut, reusing the dashboard's visual language */
+  function seeded(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  function series(seed,n,start,drift,vol){var r=seeded(seed),v=start,o=[];for(var i=0;i<n;i++){v=v*(1+drift/n+(r()-.5)*vol);o.push(v);}return o;}
+  function area(vals,w,h,id){
+    var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals),rg=(mx-mn)||1,d="";
+    for(var i=0;i<vals.length;i++){d+=(i?"L":"M")+((i/(vals.length-1))*w).toFixed(2)+" "+(10+(1-(vals[i]-mn)/rg)*(h-20)).toFixed(2);}
+    var ly=10+(1-(vals[vals.length-1]-mn)/rg)*(h-20);
+    return '<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" style="height:'+h+'px;width:100%" fill="none" role="img" aria-label="Portfolio history">'+
+      '<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E879C7" stop-opacity=".38"/><stop offset="1" stop-color="#3B5BFF" stop-opacity="0"/></linearGradient>'+
+      '<linearGradient id="'+id+'s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3B5BFF"/><stop offset="1" stop-color="#E879C7"/></linearGradient></defs>'+
+      '<path d="'+d+'L'+w+' '+h+'L0 '+h+'Z" fill="url(#'+id+')"/>'+
+      '<path d="'+d+'" stroke="url(#'+id+'s)" stroke-width="1.8" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>'+
+      '<circle cx="'+w+'" cy="'+ly.toFixed(2)+'" r="3.2" fill="#E879C7"/></svg>';
+  }
+  $("#pv-spark").innerHTML=area(series(7,90,100,.34,.016),480,86,"pvg");
+
+  var COLS=["#E879C7","#C46BE0","#A45FEE","#8B5CF6","#6E63F8","#5570FF","#3B5BFF","#2F7DE0"];
+  var R=54,C=2*Math.PI*R,off=0,segs="";
+  BOOK.forEach(function(h,i){
+    var len=h.w/100*C;
+    segs+='<circle cx="70" cy="70" r="'+R+'" fill="none" stroke="'+COLS[i]+'" stroke-width="15" stroke-dasharray="'+(len-2.5).toFixed(2)+' '+(C-len+2.5).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'" stroke-linecap="round"><title>'+h.t+' '+h.w.toFixed(1)+'%</title></circle>';
+    off+=len;
+  });
+  $("#donut").innerHTML='<svg viewBox="0 0 140 140" width="140" height="140" role="img" aria-label="Allocation">'+segs+'</svg>'+
+    '<div class="mid"><div class="k">Positions</div><div class="v">'+BOOK.length+'</div></div>';
+  $("#legend").innerHTML=BOOK.map(function(h,i){
+    return '<div><i style="background:'+COLS[i]+'"></i><span class="tick">'+h.t+'</span><span class="g"></span>'+
+      '<span style="color:var(--ink-2)">'+h.w.toFixed(1)+'%</span></div>';
+  }).join("");
+
+  /* ---------- prototype state switch ---------- */
+  function setState(s){
+    var paid=s==="unlocked";
+    $("#locked").hidden=paid;
+    $("#unlocked").hidden=!paid;
+    $("#tier-chip").textContent=paid?"Premium":"Free plan";
+    $("#tier-chip").style.cssText=paid
+      ?"color:var(--magenta);border-color:rgba(232,121,199,.3);background:rgba(232,121,199,.09)":"";
+    $("#head-title").textContent=paid
+      ? "My portfolio, as of the close on 12 August."
+      : "Every position I hold, published after the close.";
+    $("#head-sub").hidden=paid;
+  }
+  $("#statesw").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    [].forEach.call(this.children,function(c){c.setAttribute("aria-pressed",String(c===b));});
+    setState(b.dataset.s);
+  });
+  $("#subscribe").addEventListener("click",function(){
+    // Phase 6: POST /api/checkout → Stripe Checkout Session → redirect.
+    setState("unlocked");
+    [].forEach.call($("#statesw").children,function(c){c.setAttribute("aria-pressed",String(c.dataset.s==="unlocked"));});
+    window.scrollTo({top:0,behavior:RM?"auto":"smooth"});
+  });
+})();
+</script>

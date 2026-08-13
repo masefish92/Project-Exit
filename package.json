@@ -1,0 +1,10 @@
+{
+  "name": "project-exit",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Project Exit — stock investment app. Currently a front-end design prototype.",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  }
+}

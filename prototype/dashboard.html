@@ -1,0 +1,555 @@
+<title>Project Exit</title>
+<link rel="stylesheet" href="/app.css">
+
+<div class="app">
+  <div class="orb" aria-hidden="true"><i class="up"></i><i class="down"></i><i class="core"></i></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <defs><linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#E879C7"/><stop offset=".55" stop-color="#8B5CF6"/><stop offset="1" stop-color="#3B5BFF"/>
+        </linearGradient></defs>
+        <path d="M3 15.5 8 9.5l4 3.6 7-9.1" stroke="url(#bg1)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="19" cy="4" r="2.6" fill="url(#bg1)"/>
+      </svg>
+      <b>Exit</b>
+    </div>
+
+    <nav class="pills" aria-label="Primary">
+      <a href="/" aria-current="page">Dashboard</a>
+      <a href="/takes.html">C:\Takes</a>
+      <a href="/research.html">Research</a>
+      <a href="/premium.html">Premium</a>
+    </nav>
+
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+      </svg>
+      <input type="search" placeholder="Search ticker or company" aria-label="Search ticker or company"/>
+      <kbd>/</kbd>
+    </div>
+
+    <span class="spacer"></span>
+    <span class="chip demo" id="feed-chip">Connecting…</span>
+    <span class="chip"><i class="dot live" id="mkt-dot"></i><span id="mkt-txt">Live quotes</span></span>
+    <div class="avatar" title="Marcus">M</div>
+  </header>
+
+  <div class="tape" id="tape" aria-label="Market ticker">
+    <div class="tape-loading">Loading ticker…</div>
+  </div>
+
+  <section class="strip" id="strip" aria-label="Market indices"></section>
+
+  <div class="grid">
+
+    <!-- MAIN CHART -->
+    <section class="card c-chart" aria-labelledby="h-ch">
+      <header>
+        <h2 id="h-ch">Price</h2>
+        <span class="badge-syn" id="syn-badge" hidden>Shaped history</span>
+        <span class="spacer"></span>
+        <div class="ranges" id="ranges" role="group" aria-label="Chart range"></div>
+      </header>
+
+      <div class="sym-head">
+        <span class="sym-tick" id="ch-tick">NVDA</span>
+        <span class="sym-name" id="ch-name">NVIDIA Corporation</span>
+        <div class="sym-price">
+          <div class="p" id="ch-price">$0.00</div>
+          <div style="font-size:12.5px;margin-top:2px"><span id="ch-chg" class="up">+0.00 (0.00%)</span></div>
+        </div>
+      </div>
+
+      <div class="chart-wrap" id="chart-wrap">
+        <div id="chart"></div>
+        <div class="tip" id="tip"><div class="t"></div><div class="v"></div></div>
+      </div>
+    </section>
+
+    <!-- FEATURED FROM C:\TAKES -->
+    <section class="feat" aria-labelledby="h-ft">
+      <div class="feat-head">
+        <h2 id="h-ft">Featured from <span class="mono-brand">C:\Takes</span></h2>
+        <span class="spacer"></span>
+        <a class="morelink" href="/takes.html">All takes <span class="arr">&#10230;</span></a>
+      </div>
+      <div class="feat-body" id="feat-body"></div>
+    </section>
+
+    <!-- MOVERS -->
+    <section class="card c-movers" aria-labelledby="h-mv">
+      <header>
+        <h2 id="h-mv">Movers</h2><span class="spacer"></span>
+        <div class="seg" id="seg" role="group" aria-label="Mover direction">
+          <button type="button" aria-pressed="true" data-d="g">Gainers</button>
+          <button type="button" aria-pressed="false" data-d="l">Losers</button>
+        </div>
+      </header>
+      <div class="rows" id="movers"></div>
+    </section>
+
+    <!-- NEWS -->
+    <section class="card c-news" aria-labelledby="h-nw">
+      <header><h2 id="h-nw">News</h2><span class="spacer"></span><button class="linkish" type="button">All stories</button></header>
+      <div class="news" id="news"></div>
+    </section>
+  </div>
+
+  <p class="disclaimer">
+    <b style="color:var(--ink-2);font-weight:500">Live:</b> quotes, index proxies, company profiles, and news come from Finnhub in real time.
+    <b style="color:var(--ink-2);font-weight:500">Sample:</b> portfolio positions and share counts are placeholders, and the movers list is
+    static — Finnhub's free plan has no movers endpoint.
+    <b style="color:var(--warn);font-weight:500">Shaped:</b> price history is generated and anchored to the real current price, because
+    historical candles are not included on the free plan. Anything shaped carries the amber badge.
+    Project Exit is for informational purposes and is not investment advice.
+  </p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- deterministic noise ---------- */
+  function seeded(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+  function series(seed,n,start,drift,vol){
+    var r=seeded(seed),v=start,out=[];
+    for(var i=0;i<n;i++){v=v*(1+drift/n+(r()-0.5)*vol);out.push(v);}
+    return out;
+  }
+
+  var fmtUSD=function(v,d){return "$"+v.toLocaleString("en-US",{minimumFractionDigits:d===undefined?2:d,maximumFractionDigits:d===undefined?2:d});};
+  var sign=function(v){return (v>=0?"+":"−")+Math.abs(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});};
+  var pct=function(v){return (v>=0?"+":"−")+Math.abs(v).toFixed(2)+"%";};
+  var cls=function(v){return v>=0?"up":"dn";};
+
+  /* ---------- data ---------- */
+  // Finnhub's free plan has no index endpoint, so the strip tracks the liquid
+  // ETF that proxies each index — real quotes rather than a fabricated number.
+  var INDICES=[
+    {t:"SPY",nm:"S&P 500",p:0,c:0,s:11},
+    {t:"QQQ",nm:"Nasdaq 100",p:0,c:0,s:22},
+    {t:"DIA",nm:"Dow 30",p:0,c:0,s:33},
+    {t:"IWM",nm:"Russell 2000",p:0,c:0,s:44},
+    {t:"GLD",nm:"Gold",p:0,c:0,s:55}
+  ];
+
+  var HOLD=[
+    {t:"NVDA",n:"NVIDIA Corporation",q:236,p:178.42,a:121.50,c:2.41,s:101},
+    {t:"AAPL",n:"Apple Inc.",       q:128,p:249.53,a:198.20,c:0.83,s:102},
+    {t:"MSFT",n:"Microsoft Corp.",  q:54, p:529.92,a:412.75,c:-0.42,s:103},
+    {t:"AMZN",n:"Amazon.com Inc.",  q:96, p:230.26,a:186.40,c:1.12,s:104},
+    {t:"GOOGL",n:"Alphabet Inc.",   q:71, p:264.23,a:165.80,c:1.94,s:105},
+    {t:"SPY", n:"SPDR S&P 500 ETF", q:22, p:680.01,a:588.40,c:0.51,s:106},
+    {t:"TSLA",n:"Tesla, Inc.",      q:34, p:427.13,a:338.90,c:-1.68,s:107},
+    {t:"AMD", n:"Advanced Micro Dev.",q:62,p:182.39,a:154.20,c:3.06,s:108}
+  ];
+
+  var WATCH=[
+    {t:"PLTR",n:"Palantir Technologies",p:84.19,c:4.12,s:201},
+    {t:"META",n:"Meta Platforms",      p:712.60,c:1.03,s:202},
+    {t:"AVGO",n:"Broadcom Inc.",       p:241.88,c:2.27,s:203},
+    {t:"COIN",n:"Coinbase Global",     p:318.45,c:-2.94,s:204},
+    {t:"JPM", n:"JPMorgan Chase",      p:279.31,c:0.36,s:205},
+    {t:"LLY", n:"Eli Lilly and Co.",   p:812.04,c:-0.71,s:206}
+  ];
+
+  var MOVERS={
+    g:[{t:"SMCI",n:"Super Micro Computer",p:48.92,c:9.41},{t:"MSTR",n:"MicroStrategy",p:392.17,c:7.08},
+       {t:"ARM", n:"Arm Holdings",p:168.33,c:5.62},{t:"MU",n:"Micron Technology",p:141.75,c:4.88},
+       {t:"PLTR",n:"Palantir Technologies",p:84.19,c:4.12}],
+    l:[{t:"WBA",n:"Walgreens Boots",p:9.14,c:-8.23},{t:"INTC",n:"Intel Corporation",p:23.60,c:-5.47},
+       {t:"NKE", n:"NIKE, Inc.",p:71.82,c:-4.15},{t:"COIN",n:"Coinbase Global",p:318.45,c:-2.94},
+       {t:"TSLA",n:"Tesla, Inc.",p:427.13,c:-1.68}]
+  };
+
+  var NEWS=[
+    {h:"Chipmakers extend rally as data-center orders outpace guidance for a third quarter",src:"Market Wire",t:"18m",tk:"NVDA",sent:1},
+    {h:"Fed minutes point to a slower path on cuts, with two policymakers dissenting",src:"Capital Daily",t:"42m",tk:null,sent:0},
+    {h:"Apple's services segment crosses a quarterly record as hardware growth flattens",src:"The Ledger",t:"1h",tk:"AAPL",sent:1},
+    {h:"Cloud capex guidance lifts software peers, though margin questions linger",src:"Market Wire",t:"2h",tk:"MSFT",sent:1},
+    {h:"EV deliveries miss consensus in Europe as price competition intensifies",src:"Auto Brief",t:"3h",tk:"TSLA",sent:-1},
+    {h:"Treasury yields ease after a soft services print, steepening the curve",src:"Capital Daily",t:"4h",tk:null,sent:0},
+    {h:"Retail earnings season opens with cautious commentary on holiday demand",src:"The Ledger",t:"5h",tk:null,sent:-1},
+    {h:"Advertising spend rebounds, benefiting the largest platform operators",src:"Market Wire",t:"6h",tk:"GOOGL",sent:1}
+  ];
+
+  var RANGES=[["1D",0.9],["5D",2.4],["1M",5],["6M",14],["YTD",22],["1Y",30],["5Y",90],["MAX",160]];
+
+  /* ---------- svg helpers ---------- */
+  function path(vals,w,h,pad){
+    var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals),rg=(mx-mn)||1;
+    var d="",i,x,y;
+    for(i=0;i<vals.length;i++){
+      x=(i/(vals.length-1))*w;
+      y=pad+(1-(vals[i]-mn)/rg)*(h-pad*2);
+      d+=(i?"L":"M")+x.toFixed(2)+" "+y.toFixed(2);
+    }
+    return {d:d,mn:mn,mx:mx,rg:rg,pad:pad};
+  }
+
+  function spark(vals,w,h,up,id){
+    var p=path(vals,w,h,2);
+    var col=up?"#34E5A3":"#FF5C7A";
+    return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" fill="none" aria-hidden="true">'+
+      '<path d="'+p.d+'" stroke="'+col+'" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/></svg>';
+  }
+
+  function area(vals,w,h,id,c1,c2){
+    var p=path(vals,w,h,10);
+    var last=vals[vals.length-1];
+    var ly=10+(1-(last-p.mn)/p.rg)*(h-20);
+    var grid="";
+    for(var g=1;g<4;g++){var gy=(h/4)*g;grid+='<line x1="0" y1="'+gy+'" x2="'+w+'" y2="'+gy+'" stroke="rgba(255,255,255,.05)" stroke-width="1"/>';}
+    return '<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" style="height:'+h+'px" fill="none" role="img" aria-label="Price history">'+
+      '<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1">'+
+      '<stop offset="0" stop-color="'+c1+'" stop-opacity=".38"/><stop offset="1" stop-color="'+c2+'" stop-opacity="0"/></linearGradient>'+
+      '<linearGradient id="'+id+'s" x1="0" y1="0" x2="1" y2="0">'+
+      '<stop offset="0" stop-color="'+c2+'"/><stop offset="1" stop-color="'+c1+'"/></linearGradient></defs>'+
+      grid+
+      '<path d="'+p.d+'L'+w+' '+h+'L0 '+h+'Z" fill="url(#'+id+')"/>'+
+      '<path d="'+p.d+'" stroke="url(#'+id+'s)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>'+
+      '<circle cx="'+w+'" cy="'+ly.toFixed(2)+'" r="3.2" fill="'+c1+'"/>'+
+      '<circle cx="'+w+'" cy="'+ly.toFixed(2)+'" r="7" fill="'+c1+'" opacity=".22"/>'+
+      '</svg>';
+  }
+
+  var $=function(s){return document.querySelector(s);};
+
+  /* ---------- index strip ---------- */
+  $("#strip").innerHTML=INDICES.map(function(x){
+    return '<div class="idx"><div class="meta"><div class="nm">'+x.nm+' · '+x.t+'</div>'+
+      '<div class="val" data-price="'+x.t+'">—</div>'+
+      '<div class="chg" data-pct="'+x.t+'">—</div></div>'+
+      spark(series(x.s,26,100,0.2,0.012),62,34,true)+'</div>';
+  }).join("");
+
+  /* ---------- featured from C:\Takes ----------
+     Placeholder set mirroring takes.html. When the CMS lands both pages read
+     from one source; until then keep the two lists in step by hand. */
+  var FEATURED=[
+    {lead:true, cat:"Market structure", date:"11 August 2026", author:"Marcus",
+     title:"The index is not the market",
+     dek:"Seven companies now carry enough weight that the S&P's headline number describes their quarter more than the economy's. That's fine until you're using the index as a hedge for something it no longer resembles."},
+    {cat:"Post-mortem", date:"22 Jul 2026", author:"Marcus",
+     title:"I was wrong about Intel, and it wasn't the thesis that failed"},
+    {cat:"Businesses", date:"29 Jul 2026", author:"Marcus",
+     title:"The market keeps pricing search disruption the numbers haven't shown up for"},
+    {cat:"Method", date:"2 Jul 2026", author:"Marcus",
+     title:"Position sizing is the only part of this I'm confident I do well"}
+  ];
+
+  var ARROW="&#10230;"; // esc() is declared further down and hoisted
+
+  function thumb(cat,i){
+    return '<div class="thumb t'+(i%4)+'" aria-hidden="true"><span>'+esc(cat)+'</span></div>';
+  }
+
+  (function renderFeatured(){
+    var lead=FEATURED[0], rest=FEATURED.slice(1);
+    var html='<a class="feat-lead" href="/takes.html">'+
+      '<div class="date">'+lead.date+'</div>'+
+      '<h3>'+esc(lead.title)+'</h3>'+
+      thumb(lead.cat,0)+
+      '<p class="dek">'+esc(lead.dek)+'</p>'+
+      '<span class="cta"><span class="arr">'+ARROW+'</span> Read the full take</span></a>'+
+      '<div class="feat-rule" aria-hidden="true"></div>'+
+      '<div class="feat-list">'+rest.map(function(a,i){
+        return '<a class="feat-item" href="/takes.html">'+thumb(a.cat,i+1)+
+          '<div><h3>'+esc(a.title)+'</h3>'+
+          '<div class="byline">'+esc(a.author)+'</div>'+
+          '<span class="badge">C:\\Takes</span>'+
+          '<span class="read"><span class="arr">'+ARROW+'</span> Read more</span></div></a>';
+      }).join("")+'</div>';
+    $("#feat-body").innerHTML=html;
+  })();
+
+  /* ---------- movers ---------- */
+  function renderMovers(d){
+    $("#movers").innerHTML=MOVERS[d].map(function(x){
+      return '<div class="row" data-t="'+x.t+'"><div class="id"><div class="tick">'+x.t+'</div><div class="sub">'+x.n+'</div></div>'+
+        '<div class="num"><div>'+fmtUSD(x.p)+'</div>'+
+        '<div class="'+cls(x.c)+'" style="font-size:11.5px">'+pct(x.c)+'</div></div></div>';
+    }).join("");
+  }
+  renderMovers("g");
+  $("#seg").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    [].forEach.call(this.children,function(c){c.setAttribute("aria-pressed",String(c===b));});
+    renderMovers(b.dataset.d);
+  });
+
+  /* ---------- news ---------- */
+  var SENT={"1":"var(--gain)","0":"rgba(255,255,255,.16)","-1":"var(--loss)"};
+  $("#news").innerHTML=NEWS.map(function(n){
+    return '<a class="na" href="#"><span class="sent" style="background:'+SENT[n.sent]+'"></span><div>'+
+      '<h3>'+n.h+'</h3><div class="meta"><span class="src">'+n.src+'</span><span>·</span><span>'+n.t+'</span>'+
+      (n.tk?'<span class="tk">'+n.tk+'</span>':'')+'</div></div></a>';
+  }).join("");
+
+  /* ================= LIVE DATA =================
+     Everything below replaces the seeded sample values with real Finnhub data,
+     proxied through /api/* so the key stays server-side. Price history is the
+     one exception — see the "Shaped history" badge on the chart. */
+
+  var ALL=HOLD.concat(WATCH);
+  var feedChip=$("#feed-chip");
+
+  function setFeed(state,text){
+    feedChip.textContent=text;
+    feedChip.className="chip"+(state==="live"?"":" demo");
+    if(state==="live"){feedChip.style.color="var(--gain)";feedChip.style.borderColor="rgba(52,229,163,.28)";feedChip.style.background="rgba(52,229,163,.08)";}
+    else{feedChip.style.cssText="";}
+  }
+
+  function repaintRow(x){
+    [].forEach.call(document.querySelectorAll('[data-price="'+x.t+'"]'),function(el){
+      var prev=el.textContent;
+      el.textContent=fmtUSD(x.p);
+      if(prev!==el.textContent&&!RM){el.classList.remove("flash");void el.offsetWidth;el.classList.add("flash");}
+    });
+    [].forEach.call(document.querySelectorAll('[data-pct="'+x.t+'"]'),function(el){
+      el.textContent=pct(x.c);
+      el.className=el.classList.contains("pill")?("pill "+cls(x.c)):cls(x.c);
+    });
+    // Tape items update in place — rebuilding the track would restart the
+    // scroll animation and visibly jump.
+    [].forEach.call(document.querySelectorAll('.tape-item[data-sym="'+x.t+'"]'),function(el){
+      var px=el.querySelector(".px"), ch=el.querySelector(".ch");
+      if(px) px.textContent=x.p>=1000
+        ? x.p.toLocaleString("en-US",{maximumFractionDigits:0})
+        : x.p.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+      if(ch&&x.prevClose!==undefined){
+        ch.textContent=sign(x.p-x.prevClose)+" ("+pct(x.c)+")";
+        ch.className="ch "+cls(x.c);
+      }
+    });
+  }
+
+  async function pollQuotes(){
+    try{
+      var syms=ALL.map(function(x){return x.t;}).join(",");
+      var r=await fetch("/api/quote?symbols="+syms);
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      var d=await r.json();
+      var got=0;
+      ALL.forEach(function(x){
+        var q=d.quotes[x.t];
+        if(!q) return;
+        got++; x.p=q.price; x.c=q.pct; x.prevClose=q.prevClose;
+        repaintRow(x);
+        if(x.t===cur.t){
+          $("#ch-price").textContent=fmtUSD(x.p);
+          var e=$("#ch-chg");
+          e.textContent=sign(x.p-x.prevClose)+" ("+pct(x.c)+")";
+          e.className=cls(x.c);
+        }
+      });
+      document.body.classList.remove("stale");
+      setFeed("live","Live · "+got+" symbols");
+    }catch(err){
+      document.body.classList.add("stale");
+      setFeed("warn","Feed offline — retrying");
+    }
+  }
+
+  async function loadNews(){
+    try{
+      var r=await fetch("/api/news");
+      var d=await r.json();
+      if(!d.news||!d.news.length) return;
+      var now=Date.now()/1000;
+      $("#news").innerHTML=d.news.slice(0,8).map(function(n){
+        var age=now-n.datetime, ago=age<3600?Math.max(1,Math.round(age/60))+"m":age<86400?Math.round(age/3600)+"h":Math.round(age/86400)+"d";
+        return '<a class="na" href="'+n.url+'" target="_blank" rel="noopener noreferrer">'+
+          '<span class="sent" style="background:rgba(255,255,255,.16)"></span><div>'+
+          '<h3>'+esc(n.headline)+'</h3><div class="meta"><span class="src">'+esc(n.source||"")+'</span>'+
+          '<span>·</span><span>'+ago+'</span></div></div></a>';
+      }).join("");
+    }catch(e){/* keep sample headlines */}
+  }
+
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+
+  async function loadNames(){
+    // Real company names + the exchange, one call each, cached 24h server-side.
+    await Promise.all(ALL.slice(0,8).map(async function(x){
+      try{
+        var d=await(await fetch("/api/profile?symbol="+x.t)).json();
+        if(d.name) x.n=d.name;
+      }catch(e){}
+    }));
+    [].forEach.call(document.querySelectorAll("[data-name]"),function(el){
+      var m=ALL.filter(function(x){return x.t===el.dataset.name;})[0];
+      if(m) el.textContent=m.n;
+    });
+    if(cur) $("#ch-name").textContent=cur.n;
+  }
+
+  /* ---------- main chart ---------- */
+  // viewBox is sized near the card's real rendered width so the non-uniform
+  // scale (preserveAspectRatio="none") stays close to 1:1 and the endpoint
+  // marker reads as a circle rather than an ellipse.
+  var CW=1460,CH=300,cur=HOLD[0],curRange=4,pts=[];
+
+  $("#ranges").innerHTML=RANGES.map(function(r,i){
+    return '<button type="button" aria-pressed="'+(i===4)+'" data-i="'+i+'">'+r[0]+'</button>';
+  }).join("");
+
+  async function drawChart(){
+    $("#ch-tick").textContent=cur.t;
+    $("#ch-name").textContent=cur.n;
+    try{
+      var r=await fetch("/api/candles?symbol="+cur.t+"&range="+RANGES[curRange][0]);
+      var d=await r.json();
+      if(!d.values) throw new Error(d.error||"no data");
+      pts=d.values;
+      cur.p=d.last;
+      var badge=$("#syn-badge");
+      badge.hidden=!d.synthetic;
+      if(d.synthetic) badge.title=d.reason;
+    }catch(e){
+      // Fall back to a local shape so the panel is never blank.
+      var rr=RANGES[curRange];
+      pts=series(cur.s+curRange*7,132,cur.p/(1+rr[1]/100),rr[1]/100,0.013);
+      pts[pts.length-1]=cur.p;
+      $("#syn-badge").hidden=false;
+      $("#syn-badge").title="Offline — showing locally generated shape.";
+    }
+    $("#chart").innerHTML=area(pts,CW,CH,"chg","#E879C7","#3B5BFF");
+    $("#ch-price").textContent=fmtUSD(cur.p);
+    var abs=cur.prevClose?cur.p-cur.prevClose:cur.p-cur.p/(1+cur.c/100);
+    var e=$("#ch-chg");
+    e.textContent=sign(abs)+" ("+pct(cur.c)+")";
+    e.className=cls(cur.c);
+  }
+
+  $("#ranges").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    curRange=+b.dataset.i;
+    [].forEach.call(this.children,function(c){c.setAttribute("aria-pressed",String(c===b));});
+    drawChart();
+  });
+
+  // Symbol selection now comes from the ticker tape and the movers list, since
+  // the watchlist panel was replaced by the featured-articles section.
+  function selectSym(t){
+    var m=ALL.filter(function(x){return x.t===t;})[0];
+    if(!m) return;
+    cur=m; drawChart();
+  }
+  $("#movers").addEventListener("click",function(e){
+    var r=e.target.closest(".row"); if(r&&r.dataset.t) selectSym(r.dataset.t);
+  });
+
+  /* ---------- crosshair ---------- */
+  var wrap=$("#chart-wrap"),tip=$("#tip"),cross=null;
+  wrap.addEventListener("pointermove",function(e){
+    var b=wrap.getBoundingClientRect();
+    var x=Math.max(0,Math.min(1,(e.clientX-b.left)/b.width));
+    var i=Math.round(x*(pts.length-1)),v=pts[i];
+    var svg=wrap.querySelector("svg"); if(!svg) return;
+    if(!cross||cross.ownerSVGElement!==svg){
+      cross=document.createElementNS("http://www.w3.org/2000/svg","g");
+      cross.innerHTML='<line y1="0" y2="'+CH+'" stroke="rgba(255,255,255,.28)" stroke-width="1" stroke-dasharray="3 3"/>'+
+                      '<circle r="4" fill="#fff"/>';
+      svg.appendChild(cross);
+    }
+    var mn=Math.min.apply(null,pts),mx=Math.max.apply(null,pts),rg=(mx-mn)||1;
+    var px=(i/(pts.length-1))*CW, py=10+(1-(v-mn)/rg)*(CH-20);
+    cross.children[0].setAttribute("x1",px); cross.children[0].setAttribute("x2",px);
+    cross.children[1].setAttribute("cx",px); cross.children[1].setAttribute("cy",py);
+    tip.style.opacity="1";
+    tip.querySelector(".t").textContent=RANGES[curRange][0]+" · point "+(i+1);
+    tip.querySelector(".v").textContent=fmtUSD(v);
+    var lx=Math.min(b.width-120,Math.max(0,x*b.width-58));
+    tip.style.transform="translate("+lx+"px,"+Math.max(0,py*(b.height/CH)-56)+"px)";
+  });
+  wrap.addEventListener("pointerleave",function(){
+    tip.style.opacity="0";
+    if(cross&&cross.parentNode){cross.parentNode.removeChild(cross);cross=null;}
+  });
+
+  /* ---------- ticker tape ----------
+     The track holds two identical copies of the list and translates by exactly
+     -50%, so the loop point is seamless. Duration is derived from measured
+     width to keep a constant px/sec speed regardless of how many symbols
+     are in the tape. */
+  var TAPE_SYMBOLS=["SPY","QQQ","DIA","AAPL","MSFT","NVDA","GOOGL","AMZN","TSLA","META","AMD","AVGO","JPM","GLD"];
+  var TAPE_SPEED=55; // px per second
+
+  // Finnhub's profile endpoint has no entry for ETFs, so they'd render as bare
+  // tickers. These read as what people actually call them.
+  var TAPE_NAMES={SPY:"S&P 500",QQQ:"Nasdaq 100",DIA:"Dow 30",IWM:"Russell 2000",GLD:"Gold"};
+
+  function tapeItem(x){
+    x.name=TAPE_NAMES[x.symbol]||x.name;
+    var icon=x.logo
+      ? '<img class="logo" src="'+esc(x.logo)+'" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),{className:\'fallback\',textContent:\''+x.symbol.charAt(0)+'\'}))"/>'
+      : '<span class="fallback">'+x.symbol.charAt(0)+'</span>';
+    var price=x.price>=1000
+      ? x.price.toLocaleString("en-US",{maximumFractionDigits:0})
+      : x.price.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+    return '<a class="tape-item" href="#" data-sym="'+x.symbol+'">'+icon+
+      '<span class="nm">'+esc(x.name)+'</span>'+
+      '<span class="px">'+price+'</span>'+
+      '<span class="ch '+cls(x.pct)+'">'+sign(x.change)+' ('+pct(x.pct)+')</span></a>';
+  }
+
+  async function loadTape(){
+    try{
+      var d=await(await fetch("/api/tape?symbols="+TAPE_SYMBOLS.join(","))).json();
+      if(!d.items||!d.items.length) throw new Error("empty");
+
+      var html=d.items.map(tapeItem).join("");
+      var tape=$("#tape");
+      // second copy is decorative duplication — hide it from assistive tech
+      tape.innerHTML='<div class="tape-track" id="tape-track">'+
+        '<div style="display:flex">'+html+'</div>'+
+        '<div style="display:flex" aria-hidden="true">'+html+'</div></div>';
+
+      var track=$("#tape-track");
+      if(!RM){
+        var half=track.scrollWidth/2;
+        track.style.animationDuration=(half/TAPE_SPEED).toFixed(1)+"s";
+      }
+      // clicking a tape item loads it into the main chart
+      track.addEventListener("click",function(e){
+        var a=e.target.closest(".tape-item"); if(!a) return;
+        e.preventDefault();
+        selectSym(a.dataset.sym);
+      });
+    }catch(err){
+      $("#tape").innerHTML='<div class="tape-loading">Ticker unavailable — retrying</div>';
+    }
+  }
+
+  /* ---------- live polling ----------
+     20s matches the server cache TTL, so extra polls cost nothing upstream and
+     we stay well inside Finnhub's 60 req/min free-tier ceiling. Polling pauses
+     when the tab is hidden. */
+  ALL=ALL.concat(INDICES);
+  loadTape();
+  pollQuotes().then(drawChart);
+  loadNews();
+  loadNames();
+
+  var timer=setInterval(pollQuotes,20000);
+  document.addEventListener("visibilitychange",function(){
+    clearInterval(timer);
+    if(!document.hidden){pollQuotes();timer=setInterval(pollQuotes,20000);}
+  });
+  setInterval(loadNews,300000);
+
+  /* ---------- "/" focuses search ---------- */
+  addEventListener("keydown",function(e){
+    if(e.key==="/"&&!/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)){
+      e.preventDefault(); document.querySelector(".search input").focus();
+    }
+  });
+})();
+</script>

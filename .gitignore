@@ -1,0 +1,25 @@
+# secrets
+.env
+.env.local
+.env*.local
+
+# deps / build
+node_modules/
+.next/
+out/
+dist/
+.vercel/
+
+# scratch
+.refframes/
+.refframes2/
+
+# Third-party design reference (CASE UI/UX — Kris Anfalova). Kept locally so the
+# design intent is preserved, excluded from the repo so a public Project-Exit
+# doesn't redistribute someone else's portfolio work. Remove these two lines to
+# include them.
+reference/
+
+# os
+Thumbs.db
+.DS_Store
