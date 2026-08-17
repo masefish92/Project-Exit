@@ -781,3 +781,191 @@ td:not(:first-child),th:not(:first-child){padding-left:16px;}
   .thumb{width:96px;}
   .feat-lead .thumb{width:120px;height:120px;}
 }
+
+/* ==================== PORTFOLIO PROFILE ==================== */
+
+.profile{
+  display:grid;grid-template-columns:1.1fr 1.5fr;gap:32px;align-items:start;
+  border:1px solid var(--line);border-radius:var(--r-lg);padding:26px 28px;margin-bottom:20px;
+  background:linear-gradient(180deg,var(--glass),var(--glass-2));
+  backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);
+}
+.who-block{display:flex;gap:18px;align-items:flex-start;}
+.who-block .avatar{width:78px;height:78px;font-size:29px;}
+.who-block h1{margin:2px 0 0;font-family:var(--font-display);font-weight:300;font-size:31px;letter-spacing:-.025em;line-height:1.1;}
+.who-block .role{
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--violet);margin-top:7px;
+}
+.who-block .loc{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--faint);margin-top:9px;}
+
+.about{display:grid;grid-template-columns:1fr 1fr;gap:26px;}
+.about h2{
+  margin:0 0 9px;font-size:12px;font-weight:500;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);
+}
+.about p{margin:0;font-size:13.5px;line-height:1.65;color:var(--ink-2);}
+
+/* sub-tabs (Overview / Research) */
+.subtabs{display:flex;gap:2px;padding:3px;border-radius:999px;margin-bottom:18px;width:max-content;
+  background:rgba(255,255,255,.035);border:1px solid var(--line-soft);}
+.subtabs a{
+  padding:7px 18px;border-radius:999px;text-decoration:none;font-size:13px;color:var(--muted);
+  transition:color .16s,background .16s;
+}
+.subtabs a:hover{color:var(--ink-2);}
+.subtabs a[aria-current="page"]{color:var(--ink);background:rgba(255,255,255,.09);}
+
+/* stat tiles */
+.pstats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.pstat{
+  border:1px solid var(--line);border-radius:var(--r-md);padding:17px 19px;
+  background:linear-gradient(180deg,var(--glass),var(--glass-2));
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+.pstat .k{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
+.pstat .v{
+  font-family:var(--font-display);font-weight:300;font-size:30px;letter-spacing:-.03em;
+  line-height:1.1;margin-top:8px;
+}
+.pstat .sub{font-size:12px;color:var(--faint);margin-top:5px;}
+
+/* performance + allocation */
+.perf-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:18px;align-items:start;margin-bottom:20px;}
+
+/* donut with an avatar core, as in the reference */
+.donut-wrap{display:grid;place-items:center;position:relative;margin:6px 0 20px;}
+.donut-wrap svg{transform:rotate(-90deg);}
+.donut-core{
+  position:absolute;width:74px;height:74px;border-radius:50%;
+  background:linear-gradient(140deg,var(--magenta),var(--violet) 55%,var(--blue));
+  display:grid;place-items:center;font-size:26px;font-weight:600;color:#0B0B18;
+  font-family:var(--font-display);
+}
+
+/* investments vs cash split */
+.split{margin-top:2px;}
+.split .row2{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;}
+.split .row2 .k{color:var(--faint);letter-spacing:.05em;text-transform:uppercase;font-size:10.5px;}
+.split .row2 .v{color:var(--ink);font-size:14px;margin-top:3px;}
+.split .bar{height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;display:flex;}
+.split .bar i{display:block;height:100%;}
+.split .bar .inv{background:linear-gradient(90deg,var(--violet),var(--magenta));}
+.split .bar .cash{background:rgba(255,255,255,.18);}
+.split .ends{display:flex;justify-content:space-between;font-size:11.5px;color:var(--faint);margin-top:7px;}
+
+/* holdings table with logos */
+.asset{display:flex;align-items:center;gap:11px;}
+.asset .ico{
+  width:26px;height:26px;border-radius:50%;flex:none;object-fit:contain;background:#fff;padding:2px;
+}
+.asset .ico-fb{
+  width:26px;height:26px;border-radius:50%;flex:none;display:grid;place-items:center;
+  font-family:var(--font-mono);font-size:10px;font-weight:600;color:#0B0B18;
+  background:linear-gradient(140deg,var(--magenta),var(--violet) 55%,var(--blue));
+}
+.asset .nm{font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;}
+.asset .co{font-size:11.5px;color:var(--faint);margin-top:2px;}
+.type-tag{
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:2px 7px;
+}
+.allocbar{display:flex;align-items:center;gap:10px;justify-content:flex-end;}
+.allocbar .track{width:58px;height:4px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;}
+.allocbar .track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--violet),var(--magenta));}
+
+/* note strip for the 'top 5 only' disclosure */
+.note{
+  display:flex;gap:12px;padding:14px 18px;border-radius:var(--r-md);margin-top:16px;
+  border:1px solid var(--line-soft);background:rgba(255,255,255,.025);
+  font-size:12.5px;color:var(--muted);line-height:1.6;
+}
+.note svg{flex:none;margin-top:2px;color:var(--faint);}
+
+@media (max-width:1160px){
+  .profile{grid-template-columns:1fr;gap:24px;}
+  .perf-grid{grid-template-columns:1fr;}
+  .pstats{grid-template-columns:repeat(2,1fr);}
+}
+@media (max-width:640px){
+  .about{grid-template-columns:1fr;gap:18px;}
+  .pstats{grid-template-columns:1fr;}
+  .who-block .avatar{width:60px;height:60px;font-size:23px;}
+  .who-block h1{font-size:25px;}
+}
+
+/* ==================== TRADE LOG ==================== */
+
+.tlog-filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;}
+.tlog-filters button{
+  padding:7px 16px;border-radius:999px;cursor:pointer;font:inherit;font-size:12.5px;
+  color:var(--muted);border:1px solid var(--line-soft);background:rgba(255,255,255,.025);
+  transition:color .15s,border-color .15s,background .15s;
+}
+.tlog-filters button:hover{color:var(--ink-2);border-color:var(--line);}
+.tlog-filters button[aria-pressed="true"]{
+  color:var(--ink);border-color:rgba(139,92,246,.45);background:rgba(139,92,246,.14);
+}
+
+.tlog{
+  border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;
+  background:linear-gradient(180deg,var(--glass),var(--glass-2));
+  backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);
+}
+.tlog-scroll{overflow-x:auto;}
+.tlog table{width:100%;border-collapse:collapse;font-size:13px;min-width:820px;}
+.tlog thead th{
+  text-align:right;font-weight:500;font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--faint);padding:14px 16px;background:rgba(255,255,255,.035);
+  border-bottom:1px solid var(--line);white-space:nowrap;
+}
+.tlog thead th:first-child,.tlog thead th:nth-child(2),.tlog thead th:nth-child(3){text-align:left;}
+.tlog td{padding:14px 16px;text-align:right;white-space:nowrap;vertical-align:middle;}
+.tlog td:first-child,.tlog td:nth-child(2),.tlog td:nth-child(3){text-align:left;}
+.tlog tr.trade-row td{border-top:1px solid var(--line-soft);}
+.tlog tr.trade-row:first-child td{border-top:0;}
+.tlog tr.trade-row:hover td{background:rgba(255,255,255,.03);}
+
+.tlog .dt{font-size:12.5px;}
+.tlog .dt span{color:var(--faint);font-size:11px;margin-left:6px;}
+.tlog .act{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.09em;}
+.tlog .act.buy{color:var(--gain);}
+.tlog .act.sell{color:var(--loss);}
+.tlog .sym{font-family:var(--font-mono);font-size:13px;letter-spacing:.07em;color:var(--ink);}
+.tlog .na{color:var(--faint);}
+
+/* rationale sits in its own full-width row beneath the trade */
+.tlog tr.rat-row td{
+  padding:0 16px 16px;text-align:left;font-size:13px;line-height:1.65;color:var(--ink-2);
+}
+.tlog tr.rat-row .lab{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--violet);margin-right:9px;
+}
+.tlog tr.rat-row p{margin:0;max-width:104ch;}
+
+/* locked rows */
+.tlog tr.locked-tr td{opacity:.6;}
+.tlog tr.locked-tr .redact{height:10px;}
+
+.tlog-lock{
+  padding:30px 26px;text-align:center;border-top:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(139,92,246,.09),rgba(232,121,199,.05));
+}
+.tlog-lock h3{margin:0 0 6px;font-size:18px;font-weight:400;letter-spacing:-.015em;}
+.tlog-lock p{margin:0 auto 18px;font-size:13px;color:var(--muted);max-width:52ch;line-height:1.6;}
+.tlog-lock .btn{width:auto;display:inline-flex;padding:12px 30px;}
+
+@media (max-width:640px){
+  .tlog table{min-width:700px;}
+}
+
+/* Movers is the last card on the dashboard now that News is gone, so it runs
+   full width and flows its rows into columns rather than one long list. */
+.c-movers{grid-column:span 12;}
+.c-movers .rows{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:0 28px;
+}
+.c-movers .row{border-top:1px solid var(--line-soft);}
+@media (max-width:1360px){ .c-movers{grid-column:span 12;} }

@@ -1,0 +1,221 @@
+<title>Exit Trades</title>
+<link rel="stylesheet" href="/app.css">
+
+<div class="app">
+  <div class="orb" aria-hidden="true"><i class="up"></i><i class="down"></i><i class="core"></i></div>
+
+  <header class="topbar">
+    <a class="brand" href="/" style="text-decoration:none;color:inherit">
+      <svg class="mark" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <defs><linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#E879C7"/><stop offset=".55" stop-color="#8B5CF6"/><stop offset="1" stop-color="#3B5BFF"/>
+        </linearGradient></defs>
+        <path d="M3 15.5 8 9.5l4 3.6 7-9.1" stroke="url(#bg1)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="19" cy="4" r="2.6" fill="url(#bg1)"/>
+      </svg>
+      <b>Exit</b>
+    </a>
+
+    <nav class="pills" aria-label="Primary">
+      <a href="/portfolio.html">Portfolio</a>
+      <a href="/trades.html" aria-current="page">Trades</a>
+      <a href="/research.html">Research</a>
+      <a href="/takes.html">C:\Takes</a>
+    </nav>
+
+    <span class="spacer"></span>
+    <span class="chip" id="tier-chip">Free plan</span>
+    <div class="avatar" title="Marcus">M</div>
+  </header>
+
+  <div class="page-head">
+    <div class="eyebrow">Exit Premium</div>
+    <h1 id="head-title">Trade log</h1>
+    <p id="head-sub">
+      Every buy and sell I've made, with the size, the price I got, and what I was thinking at the
+      time. Published one trading day after execution — including the trades that went badly.
+    </p>
+  </div>
+
+  <div class="delay">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>
+    </svg>
+    <div>
+      <b>Delayed by one trading day.</b> Nothing appears here until I have finished trading it, so
+      no subscriber is ever trading against me. This is a record, not a signal service.
+    </div>
+  </div>
+
+  <div class="tlog-filters" id="filters" role="group" aria-label="Filter trades">
+    <button type="button" aria-pressed="true" data-f="all">All trades</button>
+    <button type="button" aria-pressed="false" data-f="buy">Buys</button>
+    <button type="button" aria-pressed="false" data-f="sell">Sells</button>
+    <button type="button" aria-pressed="false" data-f="closed">Closed positions</button>
+  </div>
+
+  <div class="tlog">
+    <div class="tlog-scroll">
+      <table>
+        <thead><tr>
+          <th scope="col">Date</th><th scope="col">Trade</th><th scope="col">Asset</th>
+          <th scope="col">Type</th><th scope="col">Shares</th><th scope="col">Price</th>
+          <th scope="col">Total</th><th scope="col">Perf %</th>
+        </tr></thead>
+        <tbody id="tlog-body"></tbody>
+      </table>
+    </div>
+    <div id="lock-cta"></div>
+  </div>
+
+  <p class="disclaimer">
+    A record of my own decisions, not a recommendation — I don't know your situation, your timeline
+    or your risk tolerance, and nothing here is personal investment advice. I may buy or sell any
+    position shown at any time, including before you see it. Past results say nothing about future
+    ones. You can lose money. Sample trades below are placeholder content for layout.
+  </p>
+
+  <!-- Removed once real Stripe entitlement is wired; see PLAN.md Phase 6. -->
+  <div class="devbar">
+    Prototype state
+    <div class="seg" id="statesw" role="group" aria-label="Preview state">
+      <button type="button" aria-pressed="true" data-s="locked">Free visitor</button>
+      <button type="button" aria-pressed="false" data-s="unlocked">Subscriber</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var FREE_ROWS=2; // trades visible without a subscription
+
+  var TRADES=[
+    {d:"12 Aug 2026",tm:"15:42",side:"buy",t:"AMD",n:"Advanced Micro Devices",type:"Stock",
+     q:22,px:171.40,perf:null,closed:false,
+     rat:"Adding on the pullback after the data-center guide. The position was underweight relative to the thesis I wrote in June, and nothing in the quarter changed it. This takes AMD to roughly a tenth of the book, which is where I wanted it."},
+
+    {d:"7 Aug 2026",tm:"10:18",side:"sell",t:"TSLA",n:"Tesla Inc",type:"Stock",
+     q:16,px:441.05,perf:30.14,closed:false,
+     rat:"Trimmed about a third. This is not a call on the business — the position had grown past the point where a bad quarter would change my year, and that is a sizing failure I let run too long. Housekeeping, not insight."},
+
+    {d:"29 Jul 2026",tm:"14:05",side:"buy",t:"GOOGL",n:"Alphabet Inc",type:"Stock",
+     q:24,px:251.80,perf:null,closed:false,
+     rat:"Third add this year. The market keeps pricing search disruption that the numbers have not shown up for — query volume and pricing are both up. I could be wrong about that, and it is my single largest source of risk."},
+
+    {d:"22 Jul 2026",tm:"09:51",side:"sell",t:"INTC",n:"Intel Corp",type:"Stock",
+     q:180,px:24.90,perf:-31.06,closed:true,
+     rat:"Closed the whole position at a loss of about 31%. I bought a turnaround I now think needs several more years and more capital than the balance sheet supports. The strategy still looks right to me; I was early, and early is indistinguishable from wrong."},
+
+    {d:"11 Jul 2026",tm:"11:33",side:"buy",t:"MU",n:"Micron Technology",type:"Stock",
+     q:40,px:128.15,perf:null,closed:false,
+     rat:"Memory is cyclical and always will be. The bet is narrow: consolidation has changed the amplitude enough that trough multiples on trough earnings are simply mispriced. Sized small because I have been wrong on this before."},
+
+    {d:"3 Jun 2026",tm:"13:20",side:"sell",t:"NKE",n:"NIKE, Inc.",type:"Stock",
+     q:95,px:74.60,perf:-18.42,closed:true,
+     rat:"Exited at a loss. I bought a brand-strength argument and ignored that the wholesale channel was deteriorating faster than the direct business was growing. The thesis was about the brand; the damage was in distribution."},
+
+    {d:"20 May 2026",tm:"10:02",side:"buy",t:"NVDA",n:"NVIDIA Corp",type:"Stock",
+     q:36,px:142.88,perf:null,closed:false,
+     rat:"Adding to the largest position, which I am aware is how people get into trouble. The reason is narrow: order visibility extended by another two quarters and the second-source narrative has not dented pricing yet. Exit conditions are written up in Research."}
+  ];
+
+  var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});};
+  var usd=function(v){return "$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});};
+  var pct=function(v){return (v>=0?"+":"−")+Math.abs(v).toFixed(2)+"%";};
+  var cls=function(v){return v>=0?"up":"dn";};
+  function bar(w){return '<span class="redact" style="width:'+w+'px"></span>';}
+
+  var unlocked=false, filter="all";
+
+  function visible(){
+    return TRADES.filter(function(x){
+      if(filter==="all") return true;
+      if(filter==="closed") return x.closed;
+      return x.side===filter;
+    });
+  }
+
+  function tradeRow(x){
+    return '<tr class="trade-row">'+
+      '<td class="dt">'+x.d+'<span>'+x.tm+'</span></td>'+
+      '<td><span class="act '+x.side+'">'+x.side.toUpperCase()+'</span></td>'+
+      '<td><span class="sym">'+x.t+'</span></td>'+
+      '<td><span class="type-tag">'+x.type+'</span></td>'+
+      '<td>'+x.q+'</td>'+
+      '<td>'+usd(x.px)+'</td>'+
+      '<td>'+usd(x.q*x.px)+'</td>'+
+      '<td class="'+(x.perf===null?"na":cls(x.perf))+'">'+(x.perf===null?"N/A":pct(x.perf))+'</td>'+
+      '</tr>'+
+      '<tr class="rat-row"><td colspan="8"><p><span class="lab">Rationale</span>'+esc(x.rat)+'</p></td></tr>';
+  }
+
+  /* Locked rows carry no real values — the date and action are already implied
+     by the free rows above. In production the server never sends these. */
+  function lockedRow(x){
+    return '<tr class="trade-row locked-tr">'+
+      '<td>'+bar(72)+'</td><td>'+bar(34)+'</td><td>'+bar(42)+'</td><td>'+bar(38)+'</td>'+
+      '<td>'+bar(26)+'</td><td>'+bar(52)+'</td><td>'+bar(58)+'</td><td>'+bar(44)+'</td>'+
+      '</tr>'+
+      '<tr class="rat-row locked-tr"><td colspan="8">'+bar(560)+'</td></tr>';
+  }
+
+  function render(){
+    var list=visible();
+    if(!list.length){
+      $("#tlog-body").innerHTML='<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--faint)">No trades match that filter.</td></tr>';
+      $("#lock-cta").innerHTML="";
+      return;
+    }
+
+    var shown=unlocked?list:list.slice(0,FREE_ROWS);
+    var hidden=unlocked?0:Math.max(0,list.length-FREE_ROWS);
+
+    $("#tlog-body").innerHTML=
+      shown.map(tradeRow).join("")+
+      (hidden?list.slice(FREE_ROWS,FREE_ROWS+2).map(lockedRow).join(""):"");
+
+    $("#lock-cta").innerHTML=hidden
+      ? '<div class="tlog-lock"><h3>'+hidden+' more trades, with the reasoning behind each</h3>'+
+        '<p>The full record back to March 2026 — 214 trades, every entry and exit, including the ones '+
+        'that lost money. $19/month, cancel anytime.</p>'+
+        '<button class="btn" type="button" id="subscribe">Subscribe'+
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12h15M13 6l6 6-6 6"/></svg>'+
+        '</button></div>'
+      : "";
+
+    var sub=$("#subscribe");
+    if(sub) sub.addEventListener("click",function(){ setState(true); });
+  }
+
+  function setState(on){
+    unlocked=on;
+    $("#tier-chip").textContent=on?"Premium":"Free plan";
+    $("#tier-chip").style.cssText=on
+      ?"color:var(--magenta);border-color:rgba(232,121,199,.3);background:rgba(232,121,199,.09)":"";
+    $("#head-sub").hidden=on;
+    [].forEach.call($("#statesw").children,function(c){
+      c.setAttribute("aria-pressed",String((c.dataset.s==="unlocked")===on));
+    });
+    render();
+    if(on) window.scrollTo({top:0,behavior:RM?"auto":"smooth"});
+  }
+
+  $("#filters").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    [].forEach.call(this.children,function(c){c.setAttribute("aria-pressed",String(c===b));});
+    filter=b.dataset.f;
+    render();
+  });
+
+  $("#statesw").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    setState(b.dataset.s==="unlocked");
+  });
+
+  render();
+})();
+</script>

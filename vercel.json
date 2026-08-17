@@ -6,8 +6,9 @@
   "outputDirectory": "prototype",
   "rewrites": [
     { "source": "/", "destination": "/dashboard.html" },
-    { "source": "/takes", "destination": "/takes.html" },
+    { "source": "/portfolio", "destination": "/portfolio.html" },
+    { "source": "/trades", "destination": "/trades.html" },
     { "source": "/research", "destination": "/research.html" },
-    { "source": "/premium", "destination": "/premium.html" }
+    { "source": "/takes", "destination": "/takes.html" }
   ]
 }

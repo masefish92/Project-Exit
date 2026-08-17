@@ -5,7 +5,7 @@
   <div class="orb" aria-hidden="true"><i class="up"></i><i class="down"></i><i class="core"></i></div>
 
   <header class="topbar">
-    <div class="brand">
+    <a class="brand" href="/" style="text-decoration:none;color:inherit">
       <svg class="mark" viewBox="0 0 22 22" fill="none" aria-hidden="true">
         <defs><linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stop-color="#E879C7"/><stop offset=".55" stop-color="#8B5CF6"/><stop offset="1" stop-color="#3B5BFF"/>
@@ -14,13 +14,13 @@
         <circle cx="19" cy="4" r="2.6" fill="url(#bg1)"/>
       </svg>
       <b>Exit</b>
-    </div>
+    </a>
 
     <nav class="pills" aria-label="Primary">
-      <a href="/" aria-current="page">Dashboard</a>
-      <a href="/takes.html">C:\Takes</a>
+      <a href="/portfolio.html">Portfolio</a>
+      <a href="/trades.html">Trades</a>
       <a href="/research.html">Research</a>
-      <a href="/premium.html">Premium</a>
+      <a href="/takes.html">C:\Takes</a>
     </nav>
 
     <div class="search">
@@ -91,16 +91,11 @@
       <div class="rows" id="movers"></div>
     </section>
 
-    <!-- NEWS -->
-    <section class="card c-news" aria-labelledby="h-nw">
-      <header><h2 id="h-nw">News</h2><span class="spacer"></span><button class="linkish" type="button">All stories</button></header>
-      <div class="news" id="news"></div>
-    </section>
   </div>
 
   <p class="disclaimer">
-    <b style="color:var(--ink-2);font-weight:500">Live:</b> quotes, index proxies, company profiles, and news come from Finnhub in real time.
-    <b style="color:var(--ink-2);font-weight:500">Sample:</b> portfolio positions and share counts are placeholders, and the movers list is
+    <b style="color:var(--ink-2);font-weight:500">Live:</b> quotes, index proxies and company profiles come from Finnhub in real time.
+    <b style="color:var(--ink-2);font-weight:500">Sample:</b> the movers list is
     static — Finnhub's free plan has no movers endpoint.
     <b style="color:var(--warn);font-weight:500">Shaped:</b> price history is generated and anchored to the real current price, because
     historical candles are not included on the free plan. Anything shaped carries the amber badge.
@@ -138,24 +133,20 @@
     {t:"GLD",nm:"Gold",p:0,c:0,s:55}
   ];
 
-  var HOLD=[
-    {t:"NVDA",n:"NVIDIA Corporation",q:236,p:178.42,a:121.50,c:2.41,s:101},
-    {t:"AAPL",n:"Apple Inc.",       q:128,p:249.53,a:198.20,c:0.83,s:102},
-    {t:"MSFT",n:"Microsoft Corp.",  q:54, p:529.92,a:412.75,c:-0.42,s:103},
-    {t:"AMZN",n:"Amazon.com Inc.",  q:96, p:230.26,a:186.40,c:1.12,s:104},
-    {t:"GOOGL",n:"Alphabet Inc.",   q:71, p:264.23,a:165.80,c:1.94,s:105},
-    {t:"SPY", n:"SPDR S&P 500 ETF", q:22, p:680.01,a:588.40,c:0.51,s:106},
-    {t:"TSLA",n:"Tesla, Inc.",      q:34, p:427.13,a:338.90,c:-1.68,s:107},
-    {t:"AMD", n:"Advanced Micro Dev.",q:62,p:182.39,a:154.20,c:3.06,s:108}
-  ];
-
-  var WATCH=[
-    {t:"PLTR",n:"Palantir Technologies",p:84.19,c:4.12,s:201},
-    {t:"META",n:"Meta Platforms",      p:712.60,c:1.03,s:202},
-    {t:"AVGO",n:"Broadcom Inc.",       p:241.88,c:2.27,s:203},
-    {t:"COIN",n:"Coinbase Global",     p:318.45,c:-2.94,s:204},
-    {t:"JPM", n:"JPMorgan Chase",      p:279.31,c:0.36,s:205},
-    {t:"LLY", n:"Eli Lilly and Co.",   p:812.04,c:-0.71,s:206}
+  /* Symbols quoted on every poll. This is exactly what is VISIBLE — the ticker
+     tape plus the index strip, deduplicated. Every entry here costs one Finnhub
+     call per cache window, so nothing goes in that isn't on screen. */
+  var EQUITIES=[
+    {t:"AAPL", n:"Apple Inc.",            s:102},
+    {t:"MSFT", n:"Microsoft Corp.",       s:103},
+    {t:"NVDA", n:"NVIDIA Corporation",    s:101},
+    {t:"GOOGL",n:"Alphabet Inc.",         s:105},
+    {t:"AMZN", n:"Amazon.com Inc.",       s:104},
+    {t:"TSLA", n:"Tesla, Inc.",           s:107},
+    {t:"META", n:"Meta Platforms",        s:202},
+    {t:"AMD",  n:"Advanced Micro Devices",s:108},
+    {t:"AVGO", n:"Broadcom Inc.",         s:203},
+    {t:"JPM",  n:"JPMorgan Chase",        s:205}
   ];
 
   var MOVERS={
@@ -166,17 +157,6 @@
        {t:"NKE", n:"NIKE, Inc.",p:71.82,c:-4.15},{t:"COIN",n:"Coinbase Global",p:318.45,c:-2.94},
        {t:"TSLA",n:"Tesla, Inc.",p:427.13,c:-1.68}]
   };
-
-  var NEWS=[
-    {h:"Chipmakers extend rally as data-center orders outpace guidance for a third quarter",src:"Market Wire",t:"18m",tk:"NVDA",sent:1},
-    {h:"Fed minutes point to a slower path on cuts, with two policymakers dissenting",src:"Capital Daily",t:"42m",tk:null,sent:0},
-    {h:"Apple's services segment crosses a quarterly record as hardware growth flattens",src:"The Ledger",t:"1h",tk:"AAPL",sent:1},
-    {h:"Cloud capex guidance lifts software peers, though margin questions linger",src:"Market Wire",t:"2h",tk:"MSFT",sent:1},
-    {h:"EV deliveries miss consensus in Europe as price competition intensifies",src:"Auto Brief",t:"3h",tk:"TSLA",sent:-1},
-    {h:"Treasury yields ease after a soft services print, steepening the curve",src:"Capital Daily",t:"4h",tk:null,sent:0},
-    {h:"Retail earnings season opens with cautious commentary on holiday demand",src:"The Ledger",t:"5h",tk:null,sent:-1},
-    {h:"Advertising spend rebounds, benefiting the largest platform operators",src:"Market Wire",t:"6h",tk:"GOOGL",sent:1}
-  ];
 
   var RANGES=[["1D",0.9],["5D",2.4],["1M",5],["6M",14],["YTD",22],["1Y",30],["5Y",90],["MAX",160]];
 
@@ -271,7 +251,7 @@
   /* ---------- movers ---------- */
   function renderMovers(d){
     $("#movers").innerHTML=MOVERS[d].map(function(x){
-      return '<div class="row" data-t="'+x.t+'"><div class="id"><div class="tick">'+x.t+'</div><div class="sub">'+x.n+'</div></div>'+
+      return '<div class="row" data-t="'+x.t+'" data-n="'+x.n+'"><div class="id"><div class="tick">'+x.t+'</div><div class="sub">'+x.n+'</div></div>'+
         '<div class="num"><div>'+fmtUSD(x.p)+'</div>'+
         '<div class="'+cls(x.c)+'" style="font-size:11.5px">'+pct(x.c)+'</div></div></div>';
     }).join("");
@@ -283,20 +263,21 @@
     renderMovers(b.dataset.d);
   });
 
-  /* ---------- news ---------- */
-  var SENT={"1":"var(--gain)","0":"rgba(255,255,255,.16)","-1":"var(--loss)"};
-  $("#news").innerHTML=NEWS.map(function(n){
-    return '<a class="na" href="#"><span class="sent" style="background:'+SENT[n.sent]+'"></span><div>'+
-      '<h3>'+n.h+'</h3><div class="meta"><span class="src">'+n.src+'</span><span>·</span><span>'+n.t+'</span>'+
-      (n.tk?'<span class="tk">'+n.tk+'</span>':'')+'</div></div></a>';
-  }).join("");
-
   /* ================= LIVE DATA =================
      Everything below replaces the seeded sample values with real Finnhub data,
      proxied through /api/* so the key stays server-side. Price history is the
      one exception — see the "Shaped history" badge on the chart. */
 
-  var ALL=HOLD.concat(WATCH);
+  // Polled universe = equities + index proxies, deduplicated by ticker.
+  var ALL=(function(){
+    var seen={},out=[];
+    EQUITIES.concat(INDICES).forEach(function(x){
+      if(seen[x.t]) return;
+      seen[x.t]=1;
+      out.push(x.n?x:{t:x.t,n:x.nm,s:x.s});
+    });
+    return out;
+  })();
   var feedChip=$("#feed-chip");
 
   function setFeed(state,text){
@@ -357,22 +338,6 @@
     }
   }
 
-  async function loadNews(){
-    try{
-      var r=await fetch("/api/news");
-      var d=await r.json();
-      if(!d.news||!d.news.length) return;
-      var now=Date.now()/1000;
-      $("#news").innerHTML=d.news.slice(0,8).map(function(n){
-        var age=now-n.datetime, ago=age<3600?Math.max(1,Math.round(age/60))+"m":age<86400?Math.round(age/3600)+"h":Math.round(age/86400)+"d";
-        return '<a class="na" href="'+n.url+'" target="_blank" rel="noopener noreferrer">'+
-          '<span class="sent" style="background:rgba(255,255,255,.16)"></span><div>'+
-          '<h3>'+esc(n.headline)+'</h3><div class="meta"><span class="src">'+esc(n.source||"")+'</span>'+
-          '<span>·</span><span>'+ago+'</span></div></div></a>';
-      }).join("");
-    }catch(e){/* keep sample headlines */}
-  }
-
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 
   async function loadNames(){
@@ -394,7 +359,7 @@
   // viewBox is sized near the card's real rendered width so the non-uniform
   // scale (preserveAspectRatio="none") stays close to 1:1 and the endpoint
   // marker reads as a circle rather than an ellipse.
-  var CW=1460,CH=300,cur=HOLD[0],curRange=4,pts=[];
+  var CW=1460,CH=300,cur=ALL[2],curRange=4,pts=[];
 
   $("#ranges").innerHTML=RANGES.map(function(r,i){
     return '<button type="button" aria-pressed="'+(i===4)+'" data-i="'+i+'">'+r[0]+'</button>';
@@ -408,7 +373,11 @@
       var d=await r.json();
       if(!d.values) throw new Error(d.error||"no data");
       pts=d.values;
+      // The candles response carries live price fields, so a symbol can be
+      // charted without ever having been in the polled set.
       cur.p=d.last;
+      if(d.pct!==undefined) cur.c=d.pct;
+      if(d.prevClose!==undefined) cur.prevClose=d.prevClose;
       var badge=$("#syn-badge");
       badge.hidden=!d.synthetic;
       if(d.synthetic) badge.title=d.reason;
@@ -435,15 +404,21 @@
     drawChart();
   });
 
-  // Symbol selection now comes from the ticker tape and the movers list, since
-  // the watchlist panel was replaced by the featured-articles section.
-  function selectSym(t){
+  // Symbol selection comes from the ticker tape and the movers list, since the
+  // watchlist panel was replaced by the featured-articles section. Symbols
+  // outside the polled set (every Movers row) are charted on demand — the
+  // candles response supplies their price, so no extra polling is needed.
+  function selectSym(t,name){
     var m=ALL.filter(function(x){return x.t===t;})[0];
-    if(!m) return;
+    if(!m){
+      var seed=0; for(var i=0;i<t.length;i++) seed=(seed*31+t.charCodeAt(i))|0;
+      m={t:t,n:name||t,s:Math.abs(seed),p:0,c:0};
+    }
     cur=m; drawChart();
   }
   $("#movers").addEventListener("click",function(e){
-    var r=e.target.closest(".row"); if(r&&r.dataset.t) selectSym(r.dataset.t);
+    var r=e.target.closest(".row"); if(!r||!r.dataset.t) return;
+    selectSym(r.dataset.t,r.dataset.n);
   });
 
   /* ---------- crosshair ---------- */
@@ -479,7 +454,10 @@
      -50%, so the loop point is seamless. Duration is derived from measured
      width to keep a constant px/sec speed regardless of how many symbols
      are in the tape. */
-  var TAPE_SYMBOLS=["SPY","QQQ","DIA","AAPL","MSFT","NVDA","GOOGL","AMZN","TSLA","META","AMD","AVGO","JPM","GLD"];
+  // Derived from the polled set, so the tape can never quietly add a symbol
+  // that costs an extra Finnhub call. Index proxies lead, equities follow.
+  var TAPE_SYMBOLS=INDICES.map(function(x){return x.t;})
+    .concat(EQUITIES.map(function(x){return x.t;}));
   var TAPE_SPEED=55; // px per second
 
   // Finnhub's profile endpoint has no entry for ETFs, so they'd render as bare
@@ -529,21 +507,21 @@
   }
 
   /* ---------- live polling ----------
-     20s matches the server cache TTL, so extra polls cost nothing upstream and
-     we stay well inside Finnhub's 60 req/min free-tier ceiling. Polling pauses
-     when the tab is hidden. */
-  ALL=ALL.concat(INDICES);
+     POLL_MS matches the server's quote cache TTL. Measured cost of one open
+     tab: ~15 Finnhub calls/min against the free tier's 60/min ceiling. At the
+     previous 20s interval it was ~54/min, which left no room for a second
+     visitor. Polling pauses entirely while the tab is hidden. */
+  var POLL_MS=60000;
+
   loadTape();
   pollQuotes().then(drawChart);
-  loadNews();
   loadNames();
 
-  var timer=setInterval(pollQuotes,20000);
+  var timer=setInterval(pollQuotes,POLL_MS);
   document.addEventListener("visibilitychange",function(){
     clearInterval(timer);
-    if(!document.hidden){pollQuotes();timer=setInterval(pollQuotes,20000);}
+    if(!document.hidden){pollQuotes();timer=setInterval(pollQuotes,POLL_MS);}
   });
-  setInterval(loadNews,300000);
 
   /* ---------- "/" focuses search ---------- */
   addEventListener("keydown",function(e){

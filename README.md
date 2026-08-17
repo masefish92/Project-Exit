@@ -17,13 +17,22 @@ No dependencies to install — the server is plain Node.
 
 | Route | File | Access |
 |---|---|---|
-| `/` | `prototype/dashboard.html` | Free — ticker tape, chart, movers, news, featured writing |
-| `/takes` | `prototype/takes.html` | Free — articles and market commentary |
+| `/` | `prototype/dashboard.html` | Free — ticker tape, price chart, movers, featured writing. Landing page, not a nav tab. |
+| `/portfolio` | `prototype/portfolio.html` | Free — profile, top 5 holdings, **percentages only** |
+| `/trades` | `prototype/trades.html` | Paid — trade log with rationale, delayed one trading day |
 | `/research` | `prototype/research.html` | Paid — company research notes |
-| `/premium` | `prototype/premium.html` | Paid — the owner's portfolio, delayed one trading day |
+| `/takes` | `prototype/takes.html` | Free — articles and market commentary |
 
 Both paid pages carry a **"Prototype state"** switcher at the bottom to preview
 the free-visitor and subscriber views. It disappears once real entitlement is wired.
+
+### Where dollar amounts may appear
+
+`/portfolio` is public, so it publishes **allocation percentages and never share
+counts or position values** — share count times the live market price on the same
+page would reconstruct the position size. Dollar amounts appear only behind the
+paywall on `/trades`. The `SIZING` constant at the top of `portfolio.html`
+switches that page between `pct`, `usd` and `shares` if the decision changes.
 
 ## Architecture
 

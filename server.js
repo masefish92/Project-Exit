@@ -25,9 +25,10 @@ const TYPES = {
 // Mirrors the rewrites in vercel.json so local URLs match production.
 const REWRITES = {
   "/": "/dashboard.html",
-  "/takes": "/takes.html",
+  "/portfolio": "/portfolio.html",
+  "/trades": "/trades.html",
   "/research": "/research.html",
-  "/premium": "/premium.html",
+  "/takes": "/takes.html",
 };
 
 const server = http.createServer(async (req, res) => {
