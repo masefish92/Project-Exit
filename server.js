@@ -12,7 +12,7 @@ const fs = require("fs");
 const path = require("path");
 const { handle, statusFor } = require("./lib/finnhub");
 
-const ROOT = path.join(__dirname, "prototype");
+const ROOT = path.join(__dirname, "public");
 const PORT = Number(process.argv[2]) || 3000;
 
 const TYPES = {
@@ -23,13 +23,12 @@ const TYPES = {
 };
 
 // Mirrors the rewrites in vercel.json so local URLs match production.
-const REWRITES = {
-  "/": "/dashboard.html",
-  "/portfolio": "/portfolio.html",
-  "/trades": "/trades.html",
-  "/research": "/research.html",
-  "/takes": "/takes.html",
-};
+// Mirrors Vercel's `cleanUrls: true`, so local URLs match production exactly.
+function resolveStatic(pathname) {
+  if (pathname === "/") return "/index.html";
+  if (path.extname(pathname)) return pathname;
+  return pathname + ".html";
+}
 
 const server = http.createServer(async (req, res) => {
   const u = new URL(req.url, "http://localhost");
@@ -46,7 +45,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  const rel = REWRITES[u.pathname] || decodeURIComponent(u.pathname);
+  const rel = resolveStatic(decodeURIComponent(u.pathname));
   const file = path.join(ROOT, path.normalize(rel));
   if (!file.startsWith(ROOT)) {
     res.writeHead(403).end("Forbidden");

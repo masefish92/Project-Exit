@@ -17,10 +17,10 @@
     </a>
 
     <nav class="pills" aria-label="Primary">
-      <a href="/portfolio.html">Portfolio</a>
-      <a href="/trades.html">Trades</a>
-      <a href="/research.html">Research</a>
-      <a href="/takes.html">C:\Takes</a>
+      <a href="/portfolio">Portfolio</a>
+      <a href="/trades">Trades</a>
+      <a href="/research">Research</a>
+      <a href="/takes">C:\Takes</a>
     </nav>
 
     <div class="search">
@@ -74,7 +74,7 @@
       <div class="feat-head">
         <h2 id="h-ft">Featured from <span class="mono-brand">C:\Takes</span></h2>
         <span class="spacer"></span>
-        <a class="morelink" href="/takes.html">All takes <span class="arr">&#10230;</span></a>
+        <a class="morelink" href="/takes">All takes <span class="arr">&#10230;</span></a>
       </div>
       <div class="feat-body" id="feat-body"></div>
     </section>
@@ -231,7 +231,7 @@
 
   (function renderFeatured(){
     var lead=FEATURED[0], rest=FEATURED.slice(1);
-    var html='<a class="feat-lead" href="/takes.html">'+
+    var html='<a class="feat-lead" href="/takes">'+
       '<div class="date">'+lead.date+'</div>'+
       '<h3>'+esc(lead.title)+'</h3>'+
       thumb(lead.cat,0)+
@@ -239,7 +239,7 @@
       '<span class="cta"><span class="arr">'+ARROW+'</span> Read the full take</span></a>'+
       '<div class="feat-rule" aria-hidden="true"></div>'+
       '<div class="feat-list">'+rest.map(function(a,i){
-        return '<a class="feat-item" href="/takes.html">'+thumb(a.cat,i+1)+
+        return '<a class="feat-item" href="/takes">'+thumb(a.cat,i+1)+
           '<div><h3>'+esc(a.title)+'</h3>'+
           '<div class="byline">'+esc(a.author)+'</div>'+
           '<span class="badge">C:\\Takes</span>'+

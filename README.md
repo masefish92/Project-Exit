@@ -1,7 +1,7 @@
 # Project Exit
 
-A stock investment app — live pricing, market news, research notes, and a
-paywalled portfolio. Currently a **front-end design prototype** with a live
+A stock investment app — live pricing, a published portfolio, research notes
+and a paywalled trade log. Currently a **front-end design prototype** with a live
 Finnhub data proxy. See [PLAN.md](PLAN.md) for the full build plan.
 
 ## Run locally
@@ -17,11 +17,11 @@ No dependencies to install — the server is plain Node.
 
 | Route | File | Access |
 |---|---|---|
-| `/` | `prototype/dashboard.html` | Free — ticker tape, price chart, movers, featured writing. Landing page, not a nav tab. |
-| `/portfolio` | `prototype/portfolio.html` | Free — profile, top 5 holdings, **percentages only** |
-| `/trades` | `prototype/trades.html` | Paid — trade log with rationale, delayed one trading day |
-| `/research` | `prototype/research.html` | Paid — company research notes |
-| `/takes` | `prototype/takes.html` | Free — articles and market commentary |
+| `/` | `public/index.html` | Free — ticker tape, price chart, movers, featured writing. Landing page, not a nav tab. |
+| `/portfolio` | `public/portfolio.html` | Free — profile, top 5 holdings, **percentages only** |
+| `/trades` | `public/trades.html` | Paid — trade log with rationale, delayed one trading day |
+| `/research` | `public/research.html` | Paid — company research notes |
+| `/takes` | `public/takes.html` | Free — articles and market commentary |
 
 Both paid pages carry a **"Prototype state"** switcher at the bottom to preview
 the free-visitor and subscriber views. It disappears once real entitlement is wired.
@@ -42,11 +42,11 @@ inside the free tier's 60 req/min ceiling:
 
 | Endpoint | Cache | Notes |
 |---|---|---|
-| `/api/quote?symbols=` | 20s | Batched real-time quotes |
-| `/api/tape?symbols=` | 20s / 24h | Quotes + logos for the ticker tape |
+| `/api/quote?symbols=` | 60s | Batched real-time quotes |
+| `/api/tape?symbols=` | 60s / 24h | Quotes + logos for the ticker tape |
 | `/api/search?q=` | 10min | Symbol lookup |
 | `/api/profile?symbol=` | 24h | Company name, industry, logo |
-| `/api/news[?symbol=]` | 5min | Market or company news |
+
 | `/api/metric?symbol=` | 24h | Fundamentals |
 | `/api/candles?symbol=&range=` | — | **Shaped**, see below |
 | `/api/health` | — | Upstream call count, cache size |
@@ -64,7 +64,7 @@ Starter (~$29/mo) or Finnhub Starter (~$50/mo).
 
 ## Deploying
 
-`vercel.json` serves `prototype/` statically and Vercel picks up `api/[fn].js`
+`vercel.json` sets `cleanUrls`; Vercel serves `public/` statically by convention and picks up `api/[fn].js`
 as a serverless function, so `/api/*` works in production exactly as it does
 locally — both delegate to `lib/finnhub.js`.
 
@@ -81,7 +81,7 @@ missing, and the pages still render with the chart falling back to a local shape
 ## Repo layout
 
 ```
-prototype/     the design — one shared stylesheet, one file per page
+public/       the design — one shared stylesheet, one file per page
 lib/finnhub.js Finnhub access: fetch, cache, endpoint shapes (shared)
 api/[fn].js    Vercel serverless function → /api/quote, /api/tape, …
 server.js      local dev server (static + same /api/*)

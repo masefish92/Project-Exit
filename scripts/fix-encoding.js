@@ -15,7 +15,7 @@ const FIXES = [
   ["Â ", " "],       // nbsp
 ];
 
-const dir = path.join(__dirname, "..", "prototype");
+const dir = path.join(__dirname, "..", "public");
 for (const name of fs.readdirSync(dir)) {
   const file = path.join(dir, name);
   let text = fs.readFileSync(file, "utf8");
