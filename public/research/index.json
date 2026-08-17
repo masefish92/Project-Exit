@@ -1,0 +1,54 @@
+[
+  {
+    "slug": "micron",
+    "symbol": "MU",
+    "company": "Micron Technology, Inc.",
+    "subtitle": "AI Memory Supercycle",
+    "date": "2026-08-14",
+    "stage": "Diligence",
+    "stance": "accumulating",
+    "sector": "Semiconductors",
+    "read": "19 min",
+    "hook": "Micron is the only U.S.-listed pure-play on the AI memory supercycle — a structural DRAM/NAND oligopoly (Micron, SK Hynix, Samsung control 90%+ of DRAM) experiencing the tightest supply/demand imbalance in its history.",
+    "words": "2,907"
+  },
+  {
+    "slug": "marvell",
+    "symbol": "MRVL",
+    "company": "Marvell Technology, Inc.",
+    "subtitle": "Custom AI Silicon & Optical Interconnect",
+    "date": "2026-08-14",
+    "stage": "Diligence",
+    "stance": "holding",
+    "sector": "Semiconductors",
+    "read": "17 min",
+    "hook": "Marvell is the #2 player in the custom AI-silicon (XPU/ASIC) duopoly and a leader in AI optical interconnect — the two arms-dealer businesses that capture hyperscaler capex regardless of which GPU or accelerator wins.",
+    "words": "2,976"
+  },
+  {
+    "slug": "hut8",
+    "symbol": "HUT",
+    "company": "Hut 8 Corp.",
+    "subtitle": "Bitcoin Miner Turned AI Data Center 'Landlord",
+    "date": "2026-08-14",
+    "stage": "Diligence",
+    "stance": "holding",
+    "sector": "AI Infrastructure",
+    "read": "18 min",
+    "hook": "Hut 8 is a former Bitcoin miner that has repositioned itself as a 'power-first' energy-infrastructure and AI data center developer — effectively an AI real estate / landlord model.",
+    "words": "3,476"
+  },
+  {
+    "slug": "forgent",
+    "symbol": "FPS",
+    "company": "Forgent Power Solutions, Inc.",
+    "subtitle": "Data Center & Grid Electrical Distribution Equipment",
+    "date": "2026-08-14",
+    "stage": "Diligence",
+    "stance": "passed",
+    "sector": "AI Infrastructure",
+    "read": "16 min",
+    "hook": "Forgent is one of the purest public plays on the 'grid-to-chip' electrical bottleneck of the AI buildout — a U.S. designer/manufacturer of automatic transfer switches, switchgear, transformers, PDUs, power skids, and prefabricated eHouses that connect utility power to hyperscale data center loads.",
+    "words": "2,992"
+  }
+]

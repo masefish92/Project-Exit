@@ -4,6 +4,8 @@
   "private": true,
   "description": "Project Exit — stock investment app. Currently a front-end design prototype.",
   "scripts": {
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "build:research": "node scripts/build-research.js",
+    "fix:encoding": "node scripts/fix-encoding.js"
   }
 }

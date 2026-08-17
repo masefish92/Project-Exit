@@ -16,8 +16,17 @@ const FIXES = [
 ];
 
 const dir = path.join(__dirname, "..", "public");
-for (const name of fs.readdirSync(dir)) {
-  const file = path.join(dir, name);
+const files = [];
+(function walk(d) {
+  for (const name of fs.readdirSync(d)) {
+    const p = path.join(d, name);
+    if (fs.statSync(p).isDirectory()) walk(p);
+    else if (/\.(html|css|js|json|md)$/.test(name)) files.push(p);
+  }
+})(dir);
+
+for (const file of files) {
+  const name = path.relative(dir, file);
   let text = fs.readFileSync(file, "utf8");
   const before = text;
 

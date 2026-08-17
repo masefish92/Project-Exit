@@ -23,6 +23,14 @@
       <a href="/takes">C:\Takes</a>
     </nav>
 
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+      </svg>
+      <input type="search" id="q" placeholder="Search notes" aria-label="Search research notes"/>
+      <kbd>/</kbd>
+    </div>
+
     <span class="spacer"></span>
     <span class="chip" id="tier-chip">Free plan</span>
     <div class="avatar" title="Marcus">M</div>
@@ -30,8 +38,8 @@
 
   <div class="page-head">
     <div class="eyebrow">Exit Research</div>
-    <h1 id="head-title">The work behind every position I hold.</h1>
-    <p id="head-sub">
+    <h1>The work behind every position I hold.</h1>
+    <p>
       Long-form notes on the businesses I've studied — what I think the market is getting wrong,
       what would prove me wrong, and where I landed. Updated when the facts change, not on a
       publishing schedule. Every note says plainly what I did with my own money afterwards.
@@ -40,7 +48,7 @@
 
   <div class="byline">
     <div class="avatar">M</div>
-    <div class="who">Marcus<span>14 companies under coverage · 41 notes published</span></div>
+    <div class="who">Marcus<span id="byline-count">Loading coverage…</span></div>
   </div>
 
   <div class="delay">
@@ -54,232 +62,161 @@
     </div>
   </div>
 
-  <!-- ============ LOCKED ============ -->
-  <div id="locked">
-    <div class="lock-grid">
-      <div>
-        <section class="card" aria-labelledby="h-cov">
-          <header><h2 id="h-cov">Coverage universe</h2><span class="spacer"></span>
-            <span class="chip">14 companies</span></header>
-          <p style="margin:-4px 0 18px;color:var(--muted);font-size:13px;line-height:1.6;max-width:62ch">
-            What I cover and where I currently stand is free — the reasoning is what subscribers pay for.
-          </p>
-          <div class="tbl-scroll">
-            <table class="cov">
-              <thead><tr>
-                <th scope="col">Company</th><th scope="col">Position</th><th scope="col">Last note</th>
-              </tr></thead>
-              <tbody id="cov-tbl"></tbody>
-            </table>
-          </div>
-        </section>
-
-        <div class="sec-title">One note, free to read</div>
-        <div id="free-report"></div>
-
-        <div class="sec-title">Subscriber notes</div>
-        <div class="reports" id="locked-reports"></div>
-      </div>
-
-      <section class="card paywall" aria-labelledby="h-pay">
-        <h3 id="h-pay">Exit Premium</h3>
-        <div class="price"><b>$19</b><span>/ month</span></div>
-        <p style="margin:0;color:var(--muted);font-size:13px">One subscription covers Research and my portfolio.</p>
-
-        <ul class="perks">
-          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m4 12.5 5 5L20 6.5"/></svg>
-            <span>All 41 research notes, and every new one as it's published</span></li>
-          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m4 12.5 5 5L20 6.5"/></svg>
-            <span>The falsification section of each note — what would make me sell</span></li>
-          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m4 12.5 5 5L20 6.5"/></svg>
-            <span>My full portfolio with dollar values, delayed one trading day</span></li>
-          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m4 12.5 5 5L20 6.5"/></svg>
-            <span>Every trade with the reasoning at the time, including the losers</span></li>
-          <li class="off"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
-            <span>No price targets, no ratings, no "strong buy"</span></li>
-          <li class="off"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
-            <span>No personal advice — I can't tell you what to do with your money</span></li>
-        </ul>
-
-        <button class="btn" type="button" id="subscribe">
-          Subscribe
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
-        </button>
-        <p class="fineprint">Secure checkout by Stripe. Cancel anytime.</p>
-
-        <div class="tier-note" style="margin-top:18px">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" style="flex:none;margin-top:1px">
-            <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
-          </svg>
-          <div>Free either way: the market dashboard and everything on
-            <a href="/takes" style="color:var(--ink-2)">C:\Takes</a>.</div>
+  <div class="lock-grid">
+    <div>
+      <section class="card" aria-labelledby="h-cov">
+        <header><h2 id="h-cov">Coverage universe</h2><span class="spacer"></span>
+          <span class="chip" id="cov-count">—</span></header>
+        <p style="margin:-4px 0 18px;color:var(--muted);font-size:13px;line-height:1.6;max-width:62ch">
+          What I cover and where I currently stand is free — the reasoning is what subscribers pay for.
+        </p>
+        <div class="tbl-scroll">
+          <table class="cov">
+            <thead><tr>
+              <th scope="col">Company</th><th scope="col">Position</th><th scope="col">Last note</th>
+            </tr></thead>
+            <tbody id="cov-tbl"></tbody>
+          </table>
         </div>
       </section>
-    </div>
-  </div>
 
-  <!-- ============ UNLOCKED ============ -->
-  <div id="unlocked" hidden>
-    <div class="tagbar" id="filterbar" role="group" aria-label="Filter by position"></div>
-    <div class="reports" id="all-reports"></div>
+      <div class="tagbar" id="filterbar" role="group" aria-label="Filter by position"></div>
+      <div class="reports" id="report-list"></div>
+    </div>
+
+    <section class="card paywall" aria-labelledby="h-pay">
+      <h3 id="h-pay">Exit Premium</h3>
+      <div class="price"><b>$19</b><span>/ month</span></div>
+      <p style="margin:0;color:var(--muted);font-size:13px">One subscription covers Research and my trade log.</p>
+
+      <ul class="perks">
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m4 12.5 5 5L20 6.5"/></svg>
+          <span>Every research note in full, and each new one as it's published</span></li>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m4 12.5 5 5L20 6.5"/></svg>
+          <span>The bull and bear cases, and what would change my mind</span></li>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m4 12.5 5 5L20 6.5"/></svg>
+          <span>Every trade with the reasoning at the time, including the losers</span></li>
+        <li class="off"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          <span>No price targets, no ratings, no "strong buy"</span></li>
+        <li class="off"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          <span>No personal advice — I can't tell you what to do with your money</span></li>
+      </ul>
+
+      <button class="btn" type="button" id="subscribe">
+        Subscribe
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+      </button>
+      <p class="fineprint">Secure checkout by Stripe. Cancel anytime.</p>
+
+      <div class="tier-note" style="margin-top:18px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" style="flex:none;margin-top:1px">
+          <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
+        </svg>
+        <div>Free either way: the market dashboard, my top holdings, and everything on
+          <a href="/takes" style="color:var(--ink-2)">C:\Takes</a>.</div>
+      </div>
+    </section>
   </div>
 
   <p class="disclaimer">
     Research notes are my own analysis, written at a point in time and not maintained afterwards.
     They are not recommendations, not price targets, and not tailored to your circumstances. I hold
     positions in most companies covered and may buy or sell at any time, including before you read
-    this — see <a href="/trades" style="color:var(--ink-2)">what I own</a>. I can be wrong, and
-    the notes marked <em>Exited</em> are there because I was. Sample content below is placeholder for layout.
+    this — see <a href="/portfolio" style="color:var(--ink-2)">what I own</a>. I can be wrong, and
+    the notes marked <em>Exited</em> are there because I was.
   </p>
-
-  <!-- Removed once real Stripe entitlement is wired; see PLAN.md Phase 6. -->
-  <div class="devbar">
-    Prototype state
-    <div class="seg" id="statesw" role="group" aria-label="Preview state">
-      <button type="button" aria-pressed="true" data-s="locked">Free visitor</button>
-      <button type="button" aria-pressed="false" data-s="unlocked">Subscriber</button>
-    </div>
-  </div>
 </div>
 
 <script>
 (function(){
   "use strict";
   var $=function(s){return document.querySelector(s);};
-  var RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* Stance describes what I did with my own money — deliberately not a rating.
-     "Accumulating" is a record; "Buy" is advice. Keep it that way. */
-  var COVERAGE=[
-    {t:"NVDA", n:"NVIDIA Corp",            stance:"holding",      upd:"18 Jun 2026"},
-    {t:"GOOGL",n:"Alphabet Inc",           stance:"accumulating", upd:"29 Jul 2026"},
-    {t:"AMD",  n:"Advanced Micro Devices", stance:"accumulating", upd:"11 Aug 2026"},
-    {t:"TSLA", n:"Tesla Inc",              stance:"trimming",     upd:"3 Jun 2026"},
-    {t:"INTC", n:"Intel Corp",             stance:"exited",       upd:"22 Jul 2026"},
-    {t:"MSFT", n:"Microsoft Corp",         stance:"holding",      upd:"14 May 2026"},
-    {t:"AAPL", n:"Apple Inc",              stance:"holding",      upd:"2 Apr 2026"},
-    {t:"AMZN", n:"Amazon.com Inc",         stance:"holding",      upd:"27 Mar 2026"},
-    {t:"ASML", n:"ASML Holding",           stance:"passed",       upd:"9 Feb 2026"},
-    {t:"ARM",  n:"Arm Holdings",           stance:"passed",       upd:"21 Jan 2026"},
-    {t:"META", n:"Meta Platforms",         stance:"holding",      upd:"12 Jan 2026"},
-    {t:"SMCI", n:"Super Micro Computer",   stance:"passed",       upd:"4 Dec 2025"},
-    {t:"MU",   n:"Micron Technology",      stance:"accumulating", upd:"18 Nov 2025"},
-    {t:"COIN", n:"Coinbase Global",        stance:"passed",       upd:"30 Oct 2025"}
-  ];
+  var STANCE={accumulating:"Accumulating",holding:"Holding",trimming:"Trimming",exited:"Exited",passed:"Passed"};
+  var esc=function(s){return String(s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});};
+  var chip=function(s){return '<span class="stance '+esc(s)+'">'+(STANCE[s]||esc(s))+'</span>';};
 
-  var REPORTS=[
-    {free:true, t:"INTC", n:"Intel Corp", stance:"exited", date:"22 Jul 2026", read:"14 min", words:"3,900",
-     title:"Intel: a correct thesis on the wrong balance sheet",
-     dek:"I spent two years arguing the foundry turnaround was underpriced. I still think the strategy is right. What I underweighted was how much capital it consumes before it produces anything, and how little room the balance sheet leaves for the schedule to slip — which it did, twice. This note is the full record, including the parts I got right that didn't matter."},
+  var NOTES=[], active="all", query="";
 
-    {t:"GOOGL", n:"Alphabet Inc", stance:"accumulating", date:"29 Jul 2026", read:"22 min", words:"6,100",
-     title:"Alphabet: the disruption the numbers keep declining to show",
-     dek:"Three years of consensus that assistants eat search, against query volume and pricing that are both up. Either the disruption is slower than believed, or it's landing somewhere segment reporting doesn't reveal. I work through both cases and say which one I'm actually betting on."},
-
-    {t:"AMD", n:"Advanced Micro Devices", stance:"accumulating", date:"11 Aug 2026", read:"18 min", words:"5,200",
-     title:"AMD: buying the second-place accelerator on purpose",
-     dek:"The bull case doesn't require beating NVIDIA. It requires the market being large enough that a credible second source earns real share at acceptable margin — and hyperscalers wanting that source to exist badly enough to fund it."},
-
-    {t:"NVDA", n:"NVIDIA Corp", stance:"holding", date:"18 Jun 2026", read:"25 min", words:"7,400",
-     title:"NVIDIA: what the end of this cycle probably looks like",
-     dek:"Not a bear note. The orders are signed and the demand is measurable. But every infrastructure buildout I've studied looked this durable roughly eighteen months before it wasn't, and I want my exit conditions written down while I still hold the position."},
-
-    {t:"TSLA", n:"Tesla Inc", stance:"trimming", date:"3 Jun 2026", read:"16 min", words:"4,600",
-     title:"Tesla: separating the sizing problem from the business question",
-     dek:"I trimmed a third and it had nothing to do with my view of the company. Untangling those two things properly is most of what this note is about, because conflating them is how people talk themselves into concentration they never chose."},
-
-    {t:"MU", n:"Micron Technology", stance:"accumulating", date:"18 Nov 2025", read:"19 min", words:"5,500",
-     title:"Micron: a commodity business the market keeps pricing at trough",
-     dek:"Memory is cyclical and always will be. The question is whether consolidation has changed the amplitude enough that trough multiples on trough earnings are simply wrong now."},
-
-    {t:"ASML", n:"ASML Holding", stance:"passed", date:"9 Feb 2026", read:"13 min", words:"3,700",
-     title:"ASML: the best business I decided not to own",
-     dek:"A genuine monopoly on the hardest step in the supply chain. I passed anyway, and the reasoning is entirely about the price I was being asked to pay for certainty everyone else had already identified."}
-  ];
-
-  var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});};
-  var cap=function(s){return s.charAt(0).toUpperCase()+s.slice(1);};
-  var chip=function(s){return '<span class="stance '+s+'">'+cap(s)+'</span>';};
-
-  /* ---------- free: coverage universe ---------- */
-  $("#cov-tbl").innerHTML=COVERAGE.map(function(c){
-    return '<tr><td><span class="tick">'+c.t+'</span><div class="co">'+esc(c.n)+'</div></td>'+
-      '<td>'+chip(c.stance)+'</td><td class="upd">'+c.upd+'</td></tr>';
-  }).join("");
-
-  function reportCard(r,extra){
-    return '<a class="report'+(extra||"")+'" href="#">'+
-      '<div class="top"><span class="sym">'+r.t+'</span>'+chip(r.stance)+
-      (r.free?'<span class="freetag">Free</span>':'')+'</div>'+
-      '<h3>'+esc(r.title)+'</h3><p class="dek">'+esc(r.dek)+'</p>'+
-      '<div class="foot"><span>'+r.date+'</span><span class="sep">·</span><span>'+r.read+
-      '</span><span class="sep">·</span><span>'+r.words+' words</span></div></a>';
+  function fmtDate(iso){
+    var d=new Date(iso+"T00:00:00");
+    if(isNaN(d)) return iso;
+    return d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
   }
 
-  var free=REPORTS.filter(function(r){return r.free;})[0];
-  var paid=REPORTS.filter(function(r){return !r.free;});
-
-  $("#free-report").innerHTML=reportCard(free," free");
-
-  /* Locked cards show the company and stance — which is already public on the
-     coverage table — and redaction bars where the analysis would be. The real
-     text is never sent to an unentitled client in production. */
-  $("#locked-reports").innerHTML=paid.map(function(r){
-    return '<div class="report locked">'+
-      '<div class="top"><span class="sym">'+r.t+'</span>'+chip(r.stance)+'</div>'+
-      '<div class="lines"><i style="width:62%"></i><i style="width:88%"></i><i style="width:74%"></i></div>'+
-      '<div class="foot"><span>'+r.date+'</span><span class="sep">·</span><span>'+r.read+'</span></div></div>';
-  }).join("");
-
-  /* ---------- subscriber view ---------- */
-  var counts={};
-  REPORTS.forEach(function(r){counts[r.stance]=(counts[r.stance]||0)+1;});
-  var STANCES=Object.keys(counts);
-  var active="all";
-
-  $("#filterbar").innerHTML='<button type="button" aria-pressed="true" data-s="all">All · '+REPORTS.length+'</button>'+
-    STANCES.map(function(s){
-      return '<button type="button" aria-pressed="false" data-s="'+s+'">'+cap(s)+' · '+counts[s]+'</button>';
+  function renderCoverage(){
+    $("#cov-tbl").innerHTML=NOTES.map(function(n){
+      return '<tr><td><a href="/research/'+esc(n.slug)+'" style="text-decoration:none;color:inherit">'+
+        '<span class="tick">'+esc(n.symbol)+'</span><div class="co">'+esc(n.company)+'</div></a></td>'+
+        '<td>'+chip(n.stance)+'</td><td class="upd">'+fmtDate(n.date)+'</td></tr>';
     }).join("");
-
-  function renderAll(){
-    var list=REPORTS.filter(function(r){return active==="all"||r.stance===active;});
-    $("#all-reports").innerHTML=list.length
-      ? list.map(function(r){return reportCard(r,"");}).join("")
-      : '<div class="empty">No notes with that position yet.</div>';
+    $("#cov-count").textContent=NOTES.length+" companies";
+    $("#byline-count").textContent=NOTES.length+" companies under coverage · "+NOTES.length+" notes published";
   }
-  renderAll();
+
+  function card(n){
+    return '<a class="report" href="/research/'+esc(n.slug)+'">'+
+      '<div class="top"><span class="sym">'+esc(n.symbol)+'</span>'+chip(n.stance)+
+      '<span class="type-tag">'+esc(n.sector)+'</span></div>'+
+      '<h3>'+esc(n.company)+' — '+esc(n.subtitle)+'</h3>'+
+      '<p class="dek">'+esc(n.hook)+'</p>'+
+      '<div class="foot"><span>'+fmtDate(n.date)+'</span><span class="sep">·</span>'+
+      '<span>'+esc(n.read)+'</span><span class="sep">·</span><span>'+esc(n.words)+' words</span>'+
+      '<span class="sep">·</span><span>'+esc(n.stage)+'</span></div></a>';
+  }
+
+  function renderList(){
+    var list=NOTES.filter(function(n){
+      var okStance = active==="all" || n.stance===active;
+      var hay=(n.symbol+" "+n.company+" "+n.subtitle+" "+n.hook+" "+n.sector).toLowerCase();
+      return okStance && (!query || hay.indexOf(query)>-1);
+    });
+    $("#report-list").innerHTML=list.length
+      ? list.map(card).join("")
+      : '<div class="empty">No notes match that. Try a different position, or clear the search.</div>';
+  }
+
+  function renderFilters(){
+    var counts={};
+    NOTES.forEach(function(n){counts[n.stance]=(counts[n.stance]||0)+1;});
+    $("#filterbar").innerHTML='<button type="button" aria-pressed="true" data-s="all">All · '+NOTES.length+'</button>'+
+      Object.keys(counts).map(function(s){
+        return '<button type="button" aria-pressed="false" data-s="'+s+'">'+(STANCE[s]||s)+' · '+counts[s]+'</button>';
+      }).join("");
+  }
 
   $("#filterbar").addEventListener("click",function(e){
     var b=e.target.closest("button"); if(!b) return;
     [].forEach.call(this.children,function(c){c.setAttribute("aria-pressed",String(c===b));});
     active=b.dataset.s;
-    renderAll();
+    renderList();
   });
 
-  /* ---------- prototype state switch ---------- */
-  function setState(s){
-    var paidUser=s==="unlocked";
-    $("#locked").hidden=paidUser;
-    $("#unlocked").hidden=!paidUser;
-    $("#tier-chip").textContent=paidUser?"Premium":"Free plan";
-    $("#tier-chip").style.cssText=paidUser
-      ?"color:var(--magenta);border-color:rgba(232,121,199,.3);background:rgba(232,121,199,.09)":"";
-    $("#head-title").textContent=paidUser
-      ? "41 notes on 14 companies."
-      : "The work behind every position I hold.";
-    $("#head-sub").hidden=paidUser;
-  }
-  $("#statesw").addEventListener("click",function(e){
-    var b=e.target.closest("button"); if(!b) return;
-    [].forEach.call(this.children,function(c){c.setAttribute("aria-pressed",String(c===b));});
-    setState(b.dataset.s);
+  $("#q").addEventListener("input",function(){ query=this.value.trim().toLowerCase(); renderList(); });
+  addEventListener("keydown",function(e){
+    if(e.key==="/"&&!/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)){
+      e.preventDefault(); $("#q").focus();
+    }
   });
+
   $("#subscribe").addEventListener("click",function(){
     // Phase 6: POST /api/checkout → Stripe Checkout Session → redirect.
-    setState("unlocked");
-    [].forEach.call($("#statesw").children,function(c){c.setAttribute("aria-pressed",String(c.dataset.s==="unlocked"));});
-    window.scrollTo({top:0,behavior:RM?"auto":"smooth"});
+    $("#tier-chip").textContent="Premium";
+    $("#tier-chip").style.cssText="color:var(--magenta);border-color:rgba(232,121,199,.3);background:rgba(232,121,199,.09)";
+    this.textContent="Subscribed — open any note";
   });
+
+  /* Notes are generated from content/research/*.md by scripts/build-research.js,
+     so this index never drifts from what was actually published. */
+  fetch("/research/index.json")
+    .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+    .then(function(d){
+      NOTES=d;
+      renderCoverage(); renderFilters(); renderList();
+    })
+    .catch(function(){
+      $("#report-list").innerHTML='<div class="empty">Could not load research notes. Run <code>node scripts/build-research.js</code>.</div>';
+      $("#byline-count").textContent="Coverage unavailable";
+    });
 })();
 </script>

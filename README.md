@@ -20,7 +20,7 @@ No dependencies to install — the server is plain Node.
 | `/` | `public/index.html` | Free — ticker tape, price chart, movers, featured writing. Landing page, not a nav tab. |
 | `/portfolio` | `public/portfolio.html` | Free — profile, top 5 holdings, **percentages only** |
 | `/trades` | `public/trades.html` | Paid — trade log with rationale, delayed one trading day |
-| `/research` | `public/research.html` | Paid — company research notes |
+| `/research` | `public/research.html` | Free index, **paid** notes — generated from `content/research/` |
 | `/takes` | `public/takes.html` | Free — articles and market commentary |
 
 Both paid pages carry a **"Prototype state"** switcher at the bottom to preview
@@ -34,6 +34,46 @@ page would reconstruct the position size. Dollar amounts appear only behind the
 paywall on `/trades`. The `SIZING` constant at the top of `portfolio.html`
 switches that page between `pct`, `usd` and `shares` if the decision changes.
 
+## Publishing a research note
+
+Notes are written as markdown in `content/research/` and built into pages:
+
+```bash
+npm run build:research
+```
+
+Each note produces three things in `public/research/`:
+
+| File | Contents |
+|---|---|
+| `<slug>.html` | The page, with the **free preview** inline |
+| `<slug>.body.html` | The **gated remainder**, fetched only when unlocked |
+| `index.json` | Metadata the Research index renders from |
+
+The free/paid split happens automatically at the first `## 1.` heading — the data
+table, thesis summary and "why now" are free; the analysis is paid. Frontmatter
+drives the index card:
+
+```yaml
+symbol: MU
+company: Micron Technology, Inc.
+subtitle: AI Memory Supercycle
+date: 2026-08-14
+stage: Diligence
+stance: accumulating   # accumulating | holding | trimming | exited | passed
+sector: Semiconductors
+read: 19 min
+```
+
+Because the index is generated, it can never drift from what was actually
+published. Adding a note is one markdown file plus one command.
+
+> **Before launch:** `<slug>.body.html` is a static file, so a determined visitor
+> can fetch it directly. That is fine with no auth in place, but when Stripe
+> entitlement lands the body must come from an endpoint that verifies the
+> subscription **before** returning content. The split exists now so that swap is
+> a one-line change.
+
 ## Architecture
 
 The browser never sees the Finnhub key. `server.js` reads it from `.env.local`
@@ -46,7 +86,7 @@ inside the free tier's 60 req/min ceiling:
 | `/api/tape?symbols=` | 60s / 24h | Quotes + logos for the ticker tape |
 | `/api/search?q=` | 10min | Symbol lookup |
 | `/api/profile?symbol=` | 24h | Company name, industry, logo |
-
+| `/api/news[?symbol=]` | 5min | Market or company news |
 | `/api/metric?symbol=` | 24h | Fundamentals |
 | `/api/candles?symbol=&range=` | — | **Shaped**, see below |
 | `/api/health` | — | Upstream call count, cache size |
@@ -85,12 +125,14 @@ public/       the design — one shared stylesheet, one file per page
 lib/finnhub.js Finnhub access: fetch, cache, endpoint shapes (shared)
 api/[fn].js    Vercel serverless function → /api/quote, /api/tape, …
 server.js      local dev server (static + same /api/*)
-scripts/       spike.js (probe Finnhub access), fix-encoding.js
+content/       research notes in markdown (source of truth)
+scripts/       build-research.js, spike.js, fix-encoding.js, ratecheck.js
 reference/     design reference image and video (gitignored)
 PLAN.md        phased build plan, schema, legal notes
 ```
 
 ## Disclaimer
 
-Nothing in this project is investment advice. Portfolio positions, research
-notes, and articles in the prototype are placeholder content for layout.
+Nothing in this project is investment advice. The notes in `content/research/`
+are real analysis; portfolio positions, trades and C:\Takes articles are still
+placeholder content for layout.
